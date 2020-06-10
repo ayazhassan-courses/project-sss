@@ -5,6 +5,7 @@ import time
 import sys
 pygame.mixer.init()
 clock = pygame.time.Clock()
+
 # Window Size, Player and FPS
 playerImg = pygame.image.load('dino.png')
 WIDTH = 1024
@@ -68,52 +69,6 @@ colors={
     'solid blue':(0,0,255)
 }
 ########################################################################################################################################
-def Wall(x,y):
-    image = pygame.Surface((TILESIZE, TILESIZE))
-    image.fill(colors['solid green'])
-    pygame.draw.rect(screen, colors['solid green'], (y*TILESIZE,x*TILESIZE,TILESIZE, TILESIZE))
-
-def Map():
-    for x in range(0, WIDTH, TILESIZE):
-        pygame.draw.line(screen, colors['light grey'], (x, 0), (x, HEIGHT))
-    for y in range(0, HEIGHT, TILESIZE):
-        pygame.draw.line(screen, colors['light grey'], (0, y), (WIDTH, y))
-    for x in range(len(maps)):
-        for y in range(len(maps[0])):
-            if maps[x][y]=='#':
-                Wall(x,y)
-            else:
-                pass
-
-def wallcollide(playerX, playerY, playerX_change, playerY_change):
-    global maps
-    xcor = playerX//TILESIZE
-    ycor = playerY//TILESIZE
-    if playerX_change>0:
-        if maps[ycor][xcor+1]=='#':
-            return True
-        else:
-            return False
-    elif playerX_change<0:
-        if maps[ycor][xcor-1]=='#':
-            return True
-        else:
-            return False
-    elif playerY_change>0:
-        if maps[ycor+1][xcor]=='#':
-            return True
-        else:
-            return False
-    elif playerY_change<0:
-        if maps[ycor-1][xcor]=='#':
-            return True
-        else:
-            return False
-    else:
-    
-        return False
-    
-########################################################################################################################################
 def draw_text(text, size, color, surface, x, y, center):
     font = pygame.font.SysFont(None, size)
     textobj = font.render(text, 1, color)
@@ -148,6 +103,74 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textRect.center = ( (x+(w//2)), (y+(h//2)) )
     screen.blit(textSurf, textRect)
 
+########################################################################################################################################
+def Wall(x,y,color):
+    image = pygame.Surface((TILESIZE, TILESIZE))
+    image.fill(colors[color])
+    pygame.draw.rect(screen, colors[color], (y*TILESIZE,x*TILESIZE,TILESIZE, TILESIZE))
+
+def Map():
+    chars= ['student1.png','student2.png','student3.png','student4.png','student5.png','student6.png','student7.png','student8.png']
+    for x in range(0, WIDTH, TILESIZE):
+        pygame.draw.line(screen, colors['black'], (x, 0), (x, HEIGHT))
+    for y in range(0, HEIGHT, TILESIZE):
+        pygame.draw.line(screen, colors['black'], (0, y), (WIDTH, y))
+    count = 0
+    for x in range(len(maps)):
+        for y in range(len(maps[0])):
+            if maps[x][y]=='#':
+                Wall(x,y,'green')
+            elif maps[x][y]=='!':
+                Wall(x,y,'pink')
+            elif maps[x][y]=='$':
+                Wall(x,y,'blue')       
+            elif maps[x][y]=='%':
+                Wall(x,y,'orange')
+            elif maps[x][y]=='-':
+                Wall(x,y,'purple')
+            elif maps[x][y]=='+':
+                Wall(x,y,'light grey')
+            elif maps[x][y]=='@':
+                load1 = pygame.image.load(chars[count])
+                count += 1
+                playerImg1 = pygame.transform.scale(load1, (32, 36))
+                screen.blit(playerImg1, (y*TILESIZE, x*TILESIZE))
+            else:
+                pass
+
+def wallcollide(playerX, playerY, playerX_change, playerY_change):
+    global maps
+    wallChars = '-+!$%#'
+    xcor = playerX//TILESIZE
+    ycor = playerY//TILESIZE
+    if playerX_change>0:   
+        if maps[ycor][xcor+1] in wallChars:
+            return True
+        else:
+            return False
+    elif playerX_change<0:
+        if maps[ycor][xcor-1] in wallChars:
+            return True
+        else:
+            return False
+    elif playerY_change>0:
+        if maps[ycor+1][xcor] in wallChars:
+            return True
+        else:
+            return False
+    elif playerY_change<0:
+        if maps[ycor-1][xcor] in wallChars:
+            return True
+        else:
+            return False
+    else:
+    
+        return False
+# draw_text(text, size, color, surface, x, y, center):
+def placesText():
+    draw_text('Ehsas', 25, colors['white'], screen, 880, 100, True)
+    
+########################################################################################################################################
 # Quiting function for buttons
 def quit_game():
     pygame.quit()
@@ -173,10 +196,10 @@ def paused():
                 sys.exit()
                 
         screen.fill(colors['black'])
-        draw_text('Paused',50,colors['white'], screen, 800//2, 180, True)
-        button('Exit',buttonx-50 , buttony-25+100, 100, 50, colors['pink'],colors['light pink'], quit_game)
-        button('Main Menu',buttonx-75, buttony-25+25, 150, 50, colors['pink'],colors['light pink'], game_intro)
-        button('Resume',buttonx-50, buttony-25-50, 100, 50, colors['pink'],colors['light pink'], unpause)
+        draw_text('Paused',50,colors['white'], screen, WIDTH//2, 180, True)
+        button('Exit',WIDTH//2-50 , buttony-25+100, 100, 50, colors['pink'],colors['light pink'], quit_game)
+        button('Main Menu',WIDTH//2-75, buttony-25+25, 150, 50, colors['pink'],colors['light pink'], game_intro)
+        button('Resume',WIDTH//2-50, buttony-25-50, 100, 50, colors['pink'],colors['light pink'], unpause)
         
         pygame.display.update()
         clock.tick(15) 
@@ -193,7 +216,7 @@ def instructions():
                 sys.exit()
 
         screen.fill(colors['black'])
-        draw_text('Instructions',50,colors['purple'], screen, 800//2, 50, True)
+        draw_text('Instructions',50,colors['purple'], screen, WIDTH//2, 50, True)
         button('Okay',680, 520, 100, 50, colors['green'],colors['light green'], game_intro)
         
         pygame.display.update()
@@ -214,8 +237,8 @@ def game_over():
 
         screen.fill(colors['black'])
         draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 180, True)
-        button('Exit',buttonx-50 , buttony-25+100, 100, 50, colors['orange'],colors['light orange'], quit_game)
-        button('Main Menu',buttonx-75, buttony-25, 150, 50, colors['orange'],colors['light orange'], game_intro)
+        button('Exit',WIDTH//2-50 , buttony-25+100, 100, 50, colors['orange'],colors['light orange'], quit_game)
+        button('Main Menu',WIDTH//2, buttony-25, 150, 50, colors['orange'],colors['light orange'], game_intro)
         
         pygame.display.update()
         clock.tick(15)
@@ -236,8 +259,8 @@ def you_win():
 
         screen.fill(colors['black'])
         draw_text('YOU WIN!',80,colors['pink'], screen, WIDTH//2, 180, True)
-        button('Exit',buttonx-50 , buttony-25+100, 100, 50, colors['purple'],colors['light purple'], quit_game)
-        button('Main Menu',buttonx-75, buttony-25, 150, 50, colors['purple'],colors['light purple'], game_intro)
+        button('Exit',WIDTH//2-50 , buttony-25+100, 100, 50, colors['purple'],colors['light purple'], quit_game)
+        button('Main Menu',WIDTH//2-75, buttony-25, 150, 50, colors['purple'],colors['light purple'], game_intro)
     
         pygame.display.update()
         clock.tick(15)
@@ -283,13 +306,14 @@ def game():
     while running:
         # This will delay the game the given amount of milliseconds. In our casee 0.1 seconds will be the delay
         clock.tick(FPS)
-
-        # RGB = Red, Green, Blue
         screen.fill(colors['black'])
         Map()
-        draw_text('Score:'+str(Score),TILESIZE, colors['solid blue'], screen, WIDTH//2, HEIGHT-TILESIZE//2,True)
-        button('game over',100, 100, 150, 50, colors['green'],colors['light green'], game_over)
-        button('you win',100, 400, 150, 50, colors['green'],colors['light green'], you_win)
+        
+        # score 
+        draw_text('Score:' + str(Score), TILESIZE, colors['black'], screen, 60, 15,True)
+        placesText()
+        # button('game over',100, 100, 150, 50, colors['green'],colors['light green'], game_over)
+        # button('you win',100, 400, 150, 50, colors['green'],colors['light green'], you_win)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
