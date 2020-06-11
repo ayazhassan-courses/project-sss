@@ -168,7 +168,24 @@ def wallcollide(playerX, playerY, playerX_change, playerY_change):
         return False
 # draw_text(text, size, color, surface, x, y, center):
 def placesText():
-    draw_text('Ehsas', 25, colors['white'], screen, 880, 100, True)
+    draw_text('Ehsas', 27, colors['white'], screen, 880, 110, True)
+    draw_text('Reception', 27, colors['white'], screen, 605, 100, True)
+    draw_text('Academic', 25, colors['white'], screen, 175, 95, True)    
+    draw_text('Block', 24, colors['white'], screen, 175, 115, True)
+    draw_text('Bank', 25, colors['white'], screen, 175, 207, True)
+    draw_text('Fire', 25, colors['white'], screen, 140, 370, True)
+    draw_text('Courtyard', 25, colors['white'], screen, 145, 395, True)
+    draw_text('Playground', 30, colors['white'], screen, 508, 223, True)
+    draw_text('Female Lounge', 30, colors['white'], screen, 430, 320, True)
+    draw_text('Gym', 35, colors['white'], screen, 460, 415, True)
+    draw_text('Library', 38, colors['white'], screen, 812, 240, True)
+    draw_text('Cafe2go', 25, colors['white'], screen, 880, 350, True)
+    draw_text('Cafeteria', 25, colors['white'], screen, 910, 520, True)
+    draw_text('Classroom', 30, colors['white'], screen, 685, 545, True)
+    draw_text('Zen Garden', 31, colors['white'], screen, 803, 657, True)
+    draw_text('Court', 30, colors['white'], screen, 270, 595, True)
+    draw_text('Baithak', 22, colors['white'], screen, 129, 640, True)
+    draw_text('Court', 30, colors['white'], screen, 399, 109, True)
     
 ########################################################################################################################################
 # Quiting function for buttons
@@ -217,10 +234,60 @@ def instructions():
 
         screen.fill(colors['black'])
         draw_text('Instructions',50,colors['purple'], screen, WIDTH//2, 50, True)
-        button('Okay',680, 520, 100, 50, colors['green'],colors['light green'], game_intro)
+        draw_text('• You are given 20 points initially.',25,colors['light blue'],screen,260,114,True)
+        draw_text('• There are 3 destinations that Dino must visit (i.e 3 riddles).',25,colors['light blue'],screen,370,144,True)
+        draw_text('• Upon reaching each destination, a new riddle will pop up.',25,colors['light blue'],screen,361,174,True)
+        draw_text('• Solve each riddle correctly to know where to go next.',25,colors['light blue'],screen,343,204,True)
+        draw_text('• Use the up,down,left,right keys in order to move Dino in the respective directions.',25,colors['light blue'],screen,460,234,True)
+        draw_text('• Once Dino meets his friend without being caught, you win.',25,colors['light blue'],screen,366,264,True)
+        draw_text('• If Dino is caught by a security guard, you lose.',25,colors['light blue'],screen,316,294,True)
+        draw_text('Rules',50,colors['purple'], screen, WIDTH//2, 350, True)
+        draw_text('• Cost of one hint is: 10 points. Cost of slowing down the guards speed: 5 points.',25,colors['light blue'],screen,452,390,True)
+        draw_text('• Security guards are at random places and on the watch, try to keep Dino out of their way.',25,colors['light blue'],screen,490,420,True)
+        draw_text('• You will be timed! If you take too long on a riddle, the security guards can spot Dino.',25,colors['light blue'],screen,472,450,True)
+        draw_text('• If any guard spots Dino, they will chase him.',25,colors['light blue'],screen,307,480,True)
+        draw_text('• If time runs out while solving a riddle, a guard will automatically catch Dino.',25,colors['light blue'],screen,440,510,True)
+        draw_text('• If your points run out, you have no choice but to solve riddles without a hint and keep',25,colors['light blue'],screen,475,540,True)
+        draw_text('Dino out of the sight of guards but the game will continue.',25,colors['light blue'],screen,368,570,True)
+
+        button('Exit',720, 600, 100, 50, colors['green'],colors['light green'], game_intro)
         
         pygame.display.update()
         clock.tick(15)
+
+def story():
+    global colors
+    loop = True
+    while loop:
+        buttonx = 800//2
+        buttony = 600//2 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(colors['black'])
+        draw_text('Background Story',50,colors['light red'], screen, WIDTH//2, 70, True)
+        draw_text('A Dino had a rough day and goes out for a walk.',25,colors['yellow'],screen,260,144,True)
+        draw_text('Lost in his thoughts, he loses track of where he is and',25,colors['yellow'],screen,680,144,True)
+        draw_text('ends up entering Habib University.',25,colors['yellow'],screen,210,165,True)
+        draw_text('He has entered HU accidentally and has realised that the security is tight',25,colors['yellow'],screen,663,165,True)
+        draw_text('and anyone caught will be questioned. Dino is worried because he is unaware of ',25,colors['yellow'],screen,393,187,True)
+        draw_text('what the security might do.',25,colors['yellow'],screen,835,187,True)
+        draw_text('Luckily, Dino knows a student in HU and he is sure that his friend will help him escape!',25,colors['yellow'],screen,422,208,True)
+        draw_text('However,',25,colors['yellow'],screen,820,208,True)
+        draw_text('he doesn’t know where he is.',25,colors['yellow'],screen,182,228,True)
+        draw_text('You are to help Dino find his friend!',30,colors['light red'],screen,515,260,True)
+        draw_text('It is your responsibility to navigate Dino and help him keep out of the sight of others especially security guards.',25,colors['yellow'],screen,525,300,True)
+        draw_text('In order to help, you will be given riddles based on the HU campus. The solution of each',25,colors['yellow'],screen,424,320,True)
+        draw_text('riddle is the destination',25,colors['yellow'],screen,885,320,True)
+        draw_text('you must go to where you will be given another riddle. These riddles will lead Dino to his friend who will tell him',25,colors['yellow'],screen,525,342,True)
+        draw_text('where the exit is. Make sure to watch out for security guards!',25,colors['yellow'],screen,318,362,True)
+        button('Exit',680, 520, 100, 50, colors['green'],colors['light green'], game_intro)
+        
+        pygame.display.update()
+        clock.tick(15)
+    
 
 def game_over():
     global colors
@@ -280,7 +347,8 @@ def game_intro():
         draw_text('Dinoventure', 80, colors['orange'], screen, WIDTH//2, 150, True)    
         button('New Game',WIDTH//2 - 170//2,250,170,50, colors['blue'], colors['light blue'], game)
         button('Rules and Controls',WIDTH//2 - 245//2,350,245,50,colors['blue'], colors['light blue'], instructions)
-        button('Exit',WIDTH//2 - 75//2,450,75,50,colors['blue'], colors['light blue'], quit_game) 
+        button('Story!',WIDTH//2 - 75//2,450,75,50,colors['blue'], colors['light blue'], story)
+        button('Exit',WIDTH//2 - 75//2,550,75,50,colors['blue'], colors['light blue'], quit_game) 
         
         pygame.display.update()
         clock.tick(15)
@@ -348,3 +416,13 @@ def game():
         pygame.display.update()
 
 game_intro()
+
+
+####################################################
+# Riddles = {"Cash me outside, how about that?": 'bank', "No man's land.": "female lounge" , "Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?":"ehsas centre",
+#	"You might think there are swings and slides in this space but in Habib that is not the case": 'playground',
+#	"Long ago, the four nations lived together in harmony. Then everything changed...":'fire courtyard',
+#	"Yahan pe loug umedein le kar aate hain, Paise de kar udhar bojh uthane jaate hain, Aj ko jitna bhari bojh uthaoge, Kal ko utna he meetha phal khaoge": 'gym',
+#	"Where water runs but doesn't flow, where life is still but always grows, if you're too close to central street, walking here is quite a feat!": 'zen garden',
+#	"You may be tired, do your joints ache? By now, your lungs will be out of air, your next clue lies where you least surmise, you fill your lungs with something else there": 'baithak'}
+##################################################
