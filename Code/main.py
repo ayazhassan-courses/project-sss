@@ -1,8 +1,9 @@
-import pygame
+import pygame,sys,time,random
 from pygame.locals import *
 from pygame import mixer
-import time
-import sys
+# import time
+# import random
+# import sys
 from tkinter import *
 import tkinter.messagebox
 
@@ -20,7 +21,7 @@ playerX = 64
 playerY = 64
 playerX_change = 0
 playerY_change = 0
-FPS = 20
+FPS = 5
 Score = 50
 index = 0
 Answer = ''
@@ -38,8 +39,8 @@ for i in x:
     maps.append(c)
 for x in range(len(maps)):
     for y in range(len(maps[0])):
-        if maps[x][y]=='#':
-            wallcoords.append((x*TILESIZE,y*TILESIZE))
+        if maps[x][y]=='@':
+            wallcoords.append((y*TILESIZE,x*TILESIZE))
         else:
             pass
 
@@ -77,6 +78,9 @@ colors={
 
 ########################################################################################################################################
 
+# Character Coordinates
+charcoords = {'ehsas centre':(768, 64), 'bank':(64, 192), 'playground':(352, 192), 'female lounge':(608, 288), 'Fire courtyard':(64, 348), 'gym':(672, 384), 'baithak':(160, 608), 'zen Garden':(608, 640)}
+
 # Riddles = {
 #     "Cash me outside, how about that?": 'bank', 
 #     "No man's land.": "female lounge" , 
@@ -89,8 +93,10 @@ colors={
 #     }
 
 ##^&$^^%^*&^&*^&*^&*&^*&^*^&*^&&*%^&*%^*^%&*%^&*%^&*%^&*%^&*%^&*%^&
-Riddle = {0:{"Cash me outside, how about that?":'Question',"Ehsas":0,"Bank":1,"Amphi":0}}
-
+Riddles = {1:{'Order':['bank','female lounge','ehsas centre'],0:{"Question":"Cash me outside, how about that?","Answer":'Bank'},1:{'Question':'No man\'s land.','Answer':'Female Lounge'},2:{'Question':"Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?",'Answer':"ehsas centre"}},2:{},3:{}}
+Riddle = Riddles[random.randint(1,1)]
+print(Riddle['Order'][2])
+print(charcoords['ehsas centre'])
 ########################################################################################################################################
 def draw_text(text, size, color, surface, x, y, center):
     font = pygame.font.SysFont(None, size)
@@ -192,6 +198,15 @@ def playerInteraction(playerX, playerY):
     else:
         return False
 
+def playerorder(playerX, playerY):
+    global index
+    global Score
+    x = Riddle['Order']
+    if (playerX,playerY)==charcoords[x[index]]:
+        return True
+    else:
+        return False
+
 def placesText():
     draw_text('Ehsas', 27, colors['white'], screen, 880, 110, True)
     draw_text('Reception', 27, colors['white'], screen, 605, 100, True)
@@ -215,6 +230,79 @@ def placesText():
     draw_text('Auditorium', 25, colors['white'], screen, 399, 109, True)
     
 ########################################################################################################################################
+# All Tkinter function Windows
+def tkinternext():
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()  
+    Label1 = Label(frame, text="Next go to "+str(Riddle['Order'][index]))
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()   
+
+def tkintercorrect():
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()  
+    Label1 = Label(frame, text="Congrats!! Right Answer!! 10+ Score")
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()   
+
+def tkinterwrong(x):
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()  
+    Label1 = Label(frame, text="Uh Ohh!! The right answer is"+str(x.lower()))
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()
+
+def tkintererror():
+    global Answer
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()
+    QA = []
+    for i in Riddle[index]:
+        QA.append(i)
+    Label1 = Label(frame, text="You must go to the right person!!")
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()
+
 def tkinterfunction():
     global Answer
     root = Tk()
@@ -230,7 +318,7 @@ def tkinterfunction():
     QA = []
     for i in Riddle[index]:
         QA.append(i)
-    Label1 = Label(frame, text=QA[0])
+    Label1 = Label(frame, text=Riddle[index][QA[0]])
     Label1.grid(row=0,column=0)
 
     entry = Entry(frame,text="Enter Expression")
@@ -242,6 +330,9 @@ def tkinterfunction():
     Evaluate.grid(row=2,column=2)
 
     root.mainloop()
+
+
+#########################################################################################################################################
 # Quiting function for buttons
 def quit_game():
     pygame.quit()
@@ -410,6 +501,8 @@ def game():
     global playerX_change
     global playerY
     global playerY_change
+    global Score
+    global index
     running = True
 
     # BackGround Sound
@@ -447,10 +540,20 @@ def game():
                 if event.key == pygame.K_ESCAPE:
                     pause = True
                     paused()
-                if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True:
+                if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY)==True:
                     tkinterfunction()
-                    print(Answer)
-                    you_win()
+                    if Answer==Riddle[index]['Answer'].lower():
+                        tkintercorrect()
+                        index +=1
+                        Score +=10
+                        tkinternext()
+                    else:
+                        tkinterwrong(Riddle[index]['Answer'].lower())
+                        index +=1
+                        Score-=5
+                elif event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY)==False:
+                    Score -=5
+                    tkintererror()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     playerX_change = 0
