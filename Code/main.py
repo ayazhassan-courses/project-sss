@@ -4,6 +4,7 @@ from pygame import mixer
 import time
 import sys
 from tkinter import *
+import tkinter.font as font
 import tkinter.messagebox
 
 pygame.mixer.init()
@@ -12,18 +13,28 @@ clock = pygame.time.Clock()
 
 # Window Size, Player and FPS
 playerImg = pygame.image.load('dino.png')
+policeload = pygame.image.load('police.png')
+policeImg = pygame.transform.scale(policeload, (32, 36))
 WIDTH = 1024
 HEIGHT = 768
 TILESIZE = 32
 Velocity = 32
 playerX = 64
 playerY = 64
+policeX = 64
+policeY = 96 
 playerX_change = 0
 playerY_change = 0
 FPS = 20
 Score = 50
 index = 0
 Answer = ''
+
+def player(x,y):
+    screen.blit(playerImg, (x, y))
+
+def police(x,y):
+    screen.blit(policeImg, (x, y))
 
 # Map File
 x = open('Map.txt', 'r')
@@ -77,18 +88,20 @@ colors={
 
 ########################################################################################################################################
 
-# Riddles = {
-#     "Cash me outside, how about that?": 'bank', 
-#     "No man's land.": "female lounge" , 
-#     "Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?":"ehsas centre",
-# 	"You might think there are swings and slides in this space but in Habib that is not the case": 'playground',
-# 	"Long ago, the four nations lived together in harmony. Then everything changed...":'fire courtyard',
-# 	"Yahan pe loug umedein le kar aate hain, Paise de kar udhar bojh uthane jaate hain, Aj ko jitna bhari bojh uthaoge, Kal ko utna he meetha phal khaoge": 'gym',
-# 	"Where water runs but doesn't flow, where life is still but always grows, if you're too close to central street, walking here is quite a feat!": 'zen garden',
-# 	"You may be tired, do your joints ache? By now, your lungs will be out of air, your next clue lies where you least surmise, you fill your lungs with something else there": 'baithak'
-#     }
-
-##^&$^^%^*&^&*^&*^&*&^*&^*^&*^&&*%^&*%^*^%&*%^&*%^&*%^&*%^&*%^&*%^&
+Riddles = {
+    "Cash me outside, how about that?": 'bank', 
+    "No man's land.": "female lounge" , 
+    "Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?":"ehsas centre",
+	"You might think there are swings and slides in this space but in Habib that is not the case": 'playground',
+	"Long ago, the four nations lived together in harmony. Then everything changed...":'fire courtyard',
+	"Yahan pe loug umedein le kar aate hain, Paise de kar udhar bojh uthane jaate hain, Aj ko jitna bhari bojh uthaoge, Kal ko utna he meetha phal khaoge": 'gym',
+	"Where water runs but doesn't flow, where life is still but always grows, if you're too close to central street, walking here is quite a feat!": 'zen garden',
+	"You may be tired, do your joints ache? By now, your lungs will be out of air, your next clue lies where you least surmise, you fill your lungs with something else there": 'baithak',
+    "A pile of words \n Jackets of hordes \n Take a quick look \n In the place of the book": "library",
+    "To solve this little fix \n Liquids, solids, gases mix \n Head to the place of some reaction \n To further this puzzle transaction": "lab",
+    "A court of all love \n With balls from above \n The way you must get \n Is split with a net": "court",
+    "A site of work and getting things done \n Of piles of paper and not much fun \n In the clash of desk and of chair \n You will have to go there": "academic block"
+    }
 Riddle = {0:{"Cash me outside, how about that?":'Question',"Ehsas":0,"Bank":1,"Amphi":0}}
 
 ########################################################################################################################################
@@ -147,6 +160,8 @@ def Map():
             elif maps[x][y]=='+':
                 Wall(x,y,'light grey')
             elif maps[x][y]=='@':
+                if count >= 8:
+                    count = 0
                 load1 = pygame.image.load(chars[count])
                 count += 1
                 playerImg1 = pygame.transform.scale(load1, (32, 36))
@@ -217,10 +232,12 @@ def placesText():
 ########################################################################################################################################
 def tkinterfunction():
     global Answer
-    root = Tk()
-    root.resizable(0,0)
-    frame = Frame(root,padx=20,pady=20)
-    frame.pack(padx=50,pady=50)
+    root = Tk(className='Riddle') #initializing with title name
+    root.resizable(0,0) #make window resizable
+    frame = Frame(root,padx=10,pady=10)
+    frame.pack(padx=25,pady=25)
+    root.configure(bg='sky blue')
+    myFont = font.Font(family='Fixedsys', size=12, weight='bold')
     def evaluate(event):
         global Answer
         x = entry.get()
@@ -232,16 +249,18 @@ def tkinterfunction():
         QA.append(i)
     Label1 = Label(frame, text=QA[0])
     Label1.grid(row=0,column=0)
+    Label1['font'] = myFont
 
-    entry = Entry(frame,text="Enter Expression")
+    entry = Entry(frame,text="Enter Answer",bg='grey75', border=3)#????????
     entry.grid(row=1,column=2)  
 
     root.bind_all("<Return>",evaluate)
 
-    Evaluate = Button(frame,text="Evaluate",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate = Button(frame,text="Check",height=1,width=5,bd=1,command=lambda:evaluate(True),bg='indianred1',  activebackground='indianred3', fg='gold', border=3 )
     Evaluate.grid(row=2,column=2)
 
     root.mainloop()
+##########################################################################################################################################
 # Quiting function for buttons
 def quit_game():
     pygame.quit()
@@ -398,8 +417,6 @@ def game_intro():
         clock.tick(15)
 
 
-def player(x,y):
-    screen.blit(playerImg, (x, y))
 
 #####################################################################################################################################
 # Game Loop
@@ -450,7 +467,6 @@ def game():
                 if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True:
                     tkinterfunction()
                     print(Answer)
-                    you_win()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     playerX_change = 0
@@ -461,6 +477,7 @@ def game():
             playerX += playerX_change
             playerY += playerY_change
         player(playerX, playerY)
+        police(policeX, policeY)
         pygame.display.update()
 
 game_intro()
