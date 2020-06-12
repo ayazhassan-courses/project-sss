@@ -329,11 +329,11 @@ def tkinterfunction():
     QA = []
     for i in Riddle[index]:
         QA.append(i)
-    Label1 = Label(frame, text=QA[0])
+    Label1 = Label(frame, text=Riddle[index][QA[0]])
     Label1.grid(row=0,column=0)
     Label1['font'] = myFont
 
-    entry = Entry(frame,text="Enter Answer",bg='grey75', border=3)#????????
+    entry = Entry(frame,text="Enter Answer",bg='grey75', border=3)# Make an text input box\ Entry box
     entry.grid(row=1,column=2)  
 
     root.bind_all("<Return>",evaluate)
