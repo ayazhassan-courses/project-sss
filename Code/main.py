@@ -19,6 +19,7 @@ TILESIZE = 32
 Velocity = 32
 playerX = 64
 playerY = 64
+PoliceVel = 20 
 policeX = 64
 policeY = 96 
 playerX_change = 0
@@ -97,11 +98,33 @@ colors={
 # 	"You may be tired, do your joints ache? By now, your lungs will be out of air, your next clue lies where you least surmise, you fill your lungs with something else there": 'baithak',
 #     "A pile of words \n Jackets of hordes \n Take a quick look \n In the place of the book": "library",
 #     "To solve this little fix \n Liquids, solids, gases mix \n Head to the place of some reaction \n To further this puzzle transaction": "lab",
-#     "A court of all love \n With balls from above \n The way you must get \n Is split with a net": "court",
+#     "Walk or run but just don't stumble \n to where we cure our belly's rumble": "cafeteria",
 #     "A site of work and getting things done \n Of piles of paper and not much fun \n In the clash of desk and of chair \n You will have to go there": "academic block"
 #     }
-Riddles = {1:{'Order':['bank','female lounge','ehsas centre'],0:{"Question":"Cash me outside, how about that?","Answer":'Bank'},1:{'Question':'No man\'s land.','Answer':'Female Lounge'},2:{'Question':"Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?",'Answer':"ehsas centre"}},2:{},3:{}}
-Riddle = Riddles[random.randint(1,1)]
+Riddles = {
+    1:{
+        'Order':['bank','female lounge','ehsas centre','zen garden'],
+        0:{"Question":"Cash me outside, how about that?","Answer":"Bank"},
+        1:{'Question':'No man\'s land.','Answer':'Female Lounge'},
+        2:{'Question':"Nahi parha mene pura saal, ab kia hoga mera haal? \n A ayega B ayega kis ko hai mera ehsas?",'Answer':"ehsas centre"},
+        3:{'Question':"Where water runs but doesn't flow, where life is still but always grows, \n if you're too close to central street, walking here is quite a feat!", "Answer": "zen garden"}
+        },
+    2:{
+        'Order':['lab','cafeteria','library','playground'],
+        0:{"Question":"To solve this little fix \n Liquids, solids, gases mix \n Head to the place of some reaction \n To further this puzzle transaction" ,"Answer":"lab"},
+        1:{'Question':'Walk or run but just don\'t stumble, \n to where we cure our belly\'s rumble.','Answer':'cafeteria'},
+        2:{'Question':"A pile of words \n Jackets of hordes \n Take a quick look \n In the place of the book",'Answer':"library"},
+        3:{'Question':"You might think there are swings and slides in this space but in Habib that is not the case", "Answer": "playground"}
+        },
+    3:{
+        'Order':['fire courtyard','academic block','baithak','gym'],
+        0:{"Question":"Long ago, the four nations lived together in harmony. Then everything changed...","Answer":"fire courtyard"},
+        1:{'Question':'No man\'s land.','Answer':'Female Lounge'},
+        2:{'Question':"A site of work and getting things done \n Of piles of paper and not much fun \n In the clash of desk and of chair \n You will have to go there",'Answer':"academic block"},
+        3:{'Question':"Yahan pe loug umedein le kar aate hain, Paise de kar udhar bojh uthane jaate hain, Aj ko jitna bhari bojh uthaoge, Kal ko utna he meetha phal khaoge", "Answer": "gym"}
+        }
+    }
+Riddle = Riddles[random.randint(1,3)]
 # Character Coordinates
 charcoords = {'academic block': (160, 32), 'playground': (382, 192), 'labs':(64, 544), 'ehsas centre':(800, 64), 'library':(928, 192), 'bank':(96, 192), 'playground':(384, 192), 'female lounge':(576, 288), 'Fire courtyard':(64, 384), 'gym':(640, 384), 'baithak':(160, 608), 'zen Garden':(640, 640), 'cafeteria': (864,448)}
 
@@ -579,6 +602,8 @@ def game():
                     playerX_change = 0
                 if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
                     playerY_change = 0
+            if (playerX,playerY) == (policeX,policeY):
+                    game_over()
         pc = wallcollide(playerX,playerY,playerX_change,playerY_change)
         if pc==False:
             playerX += playerX_change
