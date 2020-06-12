@@ -243,16 +243,19 @@ def placesText():
 def tkinternext():
     root = Tk()
     root.resizable(0,0)
-    frame = Frame(root,padx=20,pady=20)
-    frame.pack(padx=50,pady=50)
+    frame = Frame(root,padx=10,pady=10)
+    frame.pack(padx=25,pady=25)
+    root.configure(bg='coral2')
+    myFont = font.Font(family='Fixedsys', size=12, weight='bold')
     def evaluate(event):
         root.destroy()  
     Label1 = Label(frame, text="Next go to "+str(Riddle['Order'][index]))
     Label1.grid(row=0,column=0)
+    Label1['font'] = myFont
 
     root.bind_all("<Return>",evaluate)
 
-    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True),bg='brown2',  activebackground='brown2', fg='gold', border=3)
     Evaluate.grid(row=2,column=2)
 
     root.mainloop()   
@@ -260,33 +263,39 @@ def tkinternext():
 def tkintercorrect():
     root = Tk()
     root.resizable(0,0)
-    frame = Frame(root,padx=20,pady=20)
-    frame.pack(padx=50,pady=50)
+    frame = Frame(root,padx=10,pady=10)
+    frame.pack(padx=25,pady=25)
+    root.configure(bg='forest green')
+    myFont = font.Font(family='Fixedsys', size=12, weight='bold')
     def evaluate(event):
         root.destroy()  
-    Label1 = Label(frame, text="Congrats!! Right Answer!! 10+ Score")
+    Label1 = Label(frame, text="Congrats! That is correct answer! 10+ Score")
     Label1.grid(row=0,column=0)
+    Label1['font'] = myFont
 
     root.bind_all("<Return>",evaluate)
 
-    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
-    Evaluate.grid(row=2,column=2)
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True),bg='brown2',activebackground='brown2', fg='gold', border=3)
+    Evaluate.grid(row=5,column=5)
 
     root.mainloop()   
 
 def tkinterwrong(x):
     root = Tk()
     root.resizable(0,0)
-    frame = Frame(root,padx=20,pady=20)
-    frame.pack(padx=50,pady=50)
+    frame = Frame(root,padx=10,pady=10)
+    frame.pack(padx=25,pady=25)
+    root.configure(bg='red2')
+    myFont = font.Font(family='Fixedsys', size=12, weight='bold')
     def evaluate(event):
         root.destroy()  
-    Label1 = Label(frame, text="Uh Ohh!! The right answer is"+str(x.lower()))
+    Label1 = Label(frame, text="Uh Ohh!! The correct answer is "+str(x.lower()))
     Label1.grid(row=0,column=0)
+    Label1['font'] = myFont
 
     root.bind_all("<Return>",evaluate)
 
-    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True),bg='brown2',  activebackground='brown2', fg='gold', border=3)
     Evaluate.grid(row=2,column=2)
 
     root.mainloop()
@@ -295,19 +304,22 @@ def tkintererror():
     global Answer
     root = Tk()
     root.resizable(0,0)
-    frame = Frame(root,padx=20,pady=20)
-    frame.pack(padx=50,pady=50)
+    frame = Frame(root,padx=10,pady=10)
+    frame.pack(padx=25,pady=25)
+    root.configure(bg='firebrick3')
+    myFont = font.Font(family='Fixedsys', size=12, weight='bold')
     def evaluate(event):
         root.destroy()
     QA = []
     for i in Riddle[index]:
         QA.append(i)
-    Label1 = Label(frame, text="You must go to the right person!!")
+    Label1 = Label(frame, text="You must go to the right person!")
     Label1.grid(row=0,column=0)
+    Label1['font'] = myFont
 
     root.bind_all("<Return>",evaluate)
 
-    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True),bg='brown2',  activebackground='brown2', fg='gold', border=3)
     Evaluate.grid(row=2,column=2)
 
     root.mainloop()
@@ -318,7 +330,7 @@ def tkinterfunction():
     root.resizable(0,0) #make window resizable
     frame = Frame(root,padx=10,pady=10)
     frame.pack(padx=25,pady=25)
-    root.configure(bg='sky blue')
+    root.configure(bg='DeepSkyBlue4')
     myFont = font.Font(family='Fixedsys', size=12, weight='bold')
     def evaluate(event):
         global Answer
@@ -333,12 +345,12 @@ def tkinterfunction():
     Label1.grid(row=0,column=0)
     Label1['font'] = myFont
 
-    entry = Entry(frame,text="Enter Answer",bg='grey75', border=3)# Make an text input box\ Entry box
+    entry = Entry(frame,text="Enter Answer",bg='grey75', border=3)# Make a text input box\ Entry box
     entry.grid(row=1,column=2)  
 
     root.bind_all("<Return>",evaluate)
 
-    Evaluate = Button(frame,text="Check",height=1,width=5,bd=1,command=lambda:evaluate(True),bg='indianred1',  activebackground='indianred3', fg='gold', border=3 )
+    Evaluate = Button(frame,text="Check",height=1,width=5,bd=1,command=lambda:evaluate(True),bg='brown2',  activebackground='brown2', fg='gold', border=3 )
     Evaluate.grid(row=2,column=2)
 
     root.mainloop()
@@ -579,6 +591,4 @@ def game():
         pygame.display.update()
 
 game_intro()
-
-
 
