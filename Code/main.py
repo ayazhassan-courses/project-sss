@@ -3,6 +3,9 @@ from pygame.locals import *
 from pygame import mixer
 import time
 import sys
+from tkinter import *
+import tkinter.messagebox
+
 pygame.mixer.init()
 clock = pygame.time.Clock()
 
@@ -19,6 +22,8 @@ playerX_change = 0
 playerY_change = 0
 FPS = 20
 Score = 50
+index = 0
+Answer = ''
 
 # Map File
 x = open('Map.txt', 'r')
@@ -82,6 +87,9 @@ colors={
 # 	"Where water runs but doesn't flow, where life is still but always grows, if you're too close to central street, walking here is quite a feat!": 'zen garden',
 # 	"You may be tired, do your joints ache? By now, your lungs will be out of air, your next clue lies where you least surmise, you fill your lungs with something else there": 'baithak'
 #     }
+
+##^&$^^%^*&^&*^&*^&*&^*&^*^&*^&&*%^&*%^*^%&*%^&*%^&*%^&*%^&*%^&*%^&
+Riddle = {0:{"Cash me outside, how about that?":'Question',"Ehsas":0,"Bank":1,"Amphi":0}}
 
 ########################################################################################################################################
 def draw_text(text, size, color, surface, x, y, center):
@@ -207,6 +215,33 @@ def placesText():
     draw_text('Auditorium', 25, colors['white'], screen, 399, 109, True)
     
 ########################################################################################################################################
+def tkinterfunction():
+    global Answer
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        global Answer
+        x = entry.get()
+        x = x.lower()
+        Answer = x
+        root.destroy()
+    QA = []
+    for i in Riddle[index]:
+        QA.append(i)
+    Label1 = Label(frame, text=QA[0])
+    Label1.grid(row=0,column=0)
+
+    entry = Entry(frame,text="Enter Expression")
+    entry.grid(row=1,column=2)  
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Evaluate",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()
 # Quiting function for buttons
 def quit_game():
     pygame.quit()
@@ -413,6 +448,8 @@ def game():
                     pause = True
                     paused()
                 if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True:
+                    tkinterfunction()
+                    print(Answer)
                     you_win()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
