@@ -1,8 +1,6 @@
-import pygame
+import pygame,time,sys,random
 from pygame.locals import *
 from pygame import mixer
-import time
-import sys
 from tkinter import *
 import tkinter.font as font
 import tkinter.messagebox
@@ -25,7 +23,7 @@ policeX = 64
 policeY = 96 
 playerX_change = 0
 playerY_change = 0
-FPS = 20
+FPS = 5
 Score = 50
 index = 0
 Answer = ''
@@ -49,7 +47,7 @@ for i in x:
     maps.append(c)
 for x in range(len(maps)):
     for y in range(len(maps[0])):
-        if maps[x][y]=='#':
+        if maps[x][y]=='@':
             wallcoords.append((x*TILESIZE,y*TILESIZE))
         else:
             pass
@@ -88,21 +86,24 @@ colors={
 
 ########################################################################################################################################
 
-Riddles = {
-    "Cash me outside, how about that?": 'bank', 
-    "No man's land.": "female lounge" , 
-    "Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?":"ehsas centre",
-	"You might think there are swings and slides in this space but in Habib that is not the case": 'playground',
-	"Long ago, the four nations lived together in harmony. Then everything changed...":'fire courtyard',
-	"Yahan pe loug umedein le kar aate hain, Paise de kar udhar bojh uthane jaate hain, Aj ko jitna bhari bojh uthaoge, Kal ko utna he meetha phal khaoge": 'gym',
-	"Where water runs but doesn't flow, where life is still but always grows, if you're too close to central street, walking here is quite a feat!": 'zen garden',
-	"You may be tired, do your joints ache? By now, your lungs will be out of air, your next clue lies where you least surmise, you fill your lungs with something else there": 'baithak',
-    "A pile of words \n Jackets of hordes \n Take a quick look \n In the place of the book": "library",
-    "To solve this little fix \n Liquids, solids, gases mix \n Head to the place of some reaction \n To further this puzzle transaction": "lab",
-    "A court of all love \n With balls from above \n The way you must get \n Is split with a net": "court",
-    "A site of work and getting things done \n Of piles of paper and not much fun \n In the clash of desk and of chair \n You will have to go there": "academic block"
-    }
-Riddle = {0:{"Cash me outside, how about that?":'Question',"Ehsas":0,"Bank":1,"Amphi":0}}
+# Riddles = {
+#     "Cash me outside, how about that?": 'bank', 
+#     "No man's land.": "female lounge" , 
+#     "Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?":"ehsas centre",
+# 	"You might think there are swings and slides in this space but in Habib that is not the case": 'playground',
+# 	"Long ago, the four nations lived together in harmony. Then everything changed...":'fire courtyard',
+# 	"Yahan pe loug umedein le kar aate hain, Paise de kar udhar bojh uthane jaate hain, Aj ko jitna bhari bojh uthaoge, Kal ko utna he meetha phal khaoge": 'gym',
+# 	"Where water runs but doesn't flow, where life is still but always grows, if you're too close to central street, walking here is quite a feat!": 'zen garden',
+# 	"You may be tired, do your joints ache? By now, your lungs will be out of air, your next clue lies where you least surmise, you fill your lungs with something else there": 'baithak',
+#     "A pile of words \n Jackets of hordes \n Take a quick look \n In the place of the book": "library",
+#     "To solve this little fix \n Liquids, solids, gases mix \n Head to the place of some reaction \n To further this puzzle transaction": "lab",
+#     "A court of all love \n With balls from above \n The way you must get \n Is split with a net": "court",
+#     "A site of work and getting things done \n Of piles of paper and not much fun \n In the clash of desk and of chair \n You will have to go there": "academic block"
+#     }
+Riddles = {1:{'Order':['bank','female lounge','ehsas centre'],0:{"Question":"Cash me outside, how about that?","Answer":'Bank'},1:{'Question':'No man\'s land.','Answer':'Female Lounge'},2:{'Question':"Nahi parha mene pura saal, ab kia hoga mera haal? A ayega B ayega kis ko hai mera ehsas?",'Answer':"ehsas centre"}},2:{},3:{}}
+Riddle = Riddles[random.randint(1,1)]
+# Character Coordinates
+charcoords = {'academic block': (160, 32), 'playground': (382, 192), 'labs':(64, 544), 'ehsas centre':(800, 64), 'library':(928, 192), 'bank':(96, 192), 'playground':(384, 192), 'female lounge':(576, 288), 'Fire courtyard':(64, 384), 'gym':(640, 384), 'baithak':(160, 608), 'zen Garden':(640, 640), 'cafeteria': (864,448)}
 
 ########################################################################################################################################
 def draw_text(text, size, color, surface, x, y, center):
@@ -207,6 +208,15 @@ def playerInteraction(playerX, playerY):
     else:
         return False
 
+def playerorder(playerX, playerY):
+    global index
+    global Score
+    x = Riddle['Order']
+    if (playerX,playerY)==charcoords[x[index]]:
+        return True
+    else:
+        return False
+
 def placesText():
     draw_text('Ehsas', 27, colors['white'], screen, 880, 110, True)
     draw_text('Reception', 27, colors['white'], screen, 605, 100, True)
@@ -230,6 +240,78 @@ def placesText():
     draw_text('Auditorium', 25, colors['white'], screen, 399, 109, True)
     
 ########################################################################################################################################
+def tkinternext():
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()  
+    Label1 = Label(frame, text="Next go to "+str(Riddle['Order'][index]))
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()   
+
+def tkintercorrect():
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()  
+    Label1 = Label(frame, text="Congrats!! Right Answer!! 10+ Score")
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()   
+
+def tkinterwrong(x):
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()  
+    Label1 = Label(frame, text="Uh Ohh!! The right answer is"+str(x.lower()))
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()
+
+def tkintererror():
+    global Answer
+    root = Tk()
+    root.resizable(0,0)
+    frame = Frame(root,padx=20,pady=20)
+    frame.pack(padx=50,pady=50)
+    def evaluate(event):
+        root.destroy()
+    QA = []
+    for i in Riddle[index]:
+        QA.append(i)
+    Label1 = Label(frame, text="You must go to the right person!!")
+    Label1.grid(row=0,column=0)
+
+    root.bind_all("<Return>",evaluate)
+
+    Evaluate = Button(frame,text="Okay",height=1,width=5,bd=1,command=lambda:evaluate(True))
+    Evaluate.grid(row=2,column=2)
+
+    root.mainloop()
+
 def tkinterfunction():
     global Answer
     root = Tk(className='Riddle') #initializing with title name
@@ -427,6 +509,8 @@ def game():
     global playerX_change
     global playerY
     global playerY_change
+    global Score
+    global index
     running = True
 
     # BackGround Sound
@@ -464,9 +548,20 @@ def game():
                 if event.key == pygame.K_ESCAPE:
                     pause = True
                     paused()
-                if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True:
+                if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY)==True:
                     tkinterfunction()
-                    print(Answer)
+                    if Answer==Riddle[index]['Answer'].lower():
+                        tkintercorrect()
+                        index +=1
+                        Score +=10
+                        tkinternext()
+                    else:
+                        tkinterwrong(Riddle[index]['Answer'].lower())
+                        index +=1
+                        Score-=5
+                elif event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY)==False:
+                    Score -=5
+                    tkintererror()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     playerX_change = 0
@@ -476,6 +571,9 @@ def game():
         if pc==False:
             playerX += playerX_change
             playerY += playerY_change
+        print(playerX,playerY)
+        print(charcoords[Riddle['Order'][index]])
+        print(Riddle['Order'][index])
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
