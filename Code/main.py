@@ -22,12 +22,11 @@ playerY = 5*32
 playerX_change = 0
 playerY_change = 0
 # Police Settings
-policeX = 64
-policeY = 96 
+policeX = 32
+policeY = 32 
 counter = 0
-##################
 FPS = 20
-Score = 50
+Score = 20
 riddleNum = 0
 Answer = ''
 
@@ -43,6 +42,7 @@ x = x.read()
 x = x.split('\n')
 maps = []
 nodes = {}
+
 # Making a graph
 for i in x:
     c = []
@@ -67,14 +67,52 @@ for y in range(len(maps)):
                 nodes[(x,y+1)]=nodes.get((x,y+1))+[(x,y,1)]
 print(nodes)
 
+# Restarting the Game
 def reset():
     global policeX, policeY, playerX, playerY, playerX_change, playerY_change
-    policeX = 64
-    policeY = 96 
+    policeX = 32
+    policeY = 32 
     playerX = 5*32
     playerY = 5*32
     playerX_change = 0
     playerY_change = 0
+    riddleNum = 0
+    counter = 0
+    Score = 20
+
+#  For resuming
+pause = False
+exiting = False
+gover_sound = pygame.mixer.Sound("game over.wav")
+success_sound = pygame.mixer.Sound("success.wav")
+
+# Intialize the pygame
+pygame.init()   
+
+# create the screen
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+# Caption and Icon
+pygame.display.set_caption("Dinoventure")
+icon = pygame.image.load('dino.png')
+pygame.display.set_icon(icon)
+
+# Colors using RGB
+colors={
+    'white': (255,255,255), 'black': (0,0,0),
+    'green': (110,180,0), 'light green': (110,220,0),
+    'blue': (50,150,150), 'light blue': (80,210,180),       
+    'yellow': (255,225,0), 'purple': (140,50,225),
+    'red': (200,0,0), 'light red': (255,100,100),
+    'orange': (255,100,0), 'light pink': (255,110,180),
+    'grey': (220,240,240), 'pink': (255,60,150),
+    'light orange': (250,140,10), 'light purple': (180,100,210),
+    'light grey':(100, 100, 100), 'dark grey':(40, 40, 40),
+    'solid green':(0,255,0), 'solid red':(255,0,0),
+    'solid blue':(0,0,255)
+}
+###############################################################################################################################################################################
+# Security guard Fn 
 def Enqueue(Q,item):
     Q.append(item)
 
@@ -131,40 +169,8 @@ def translator(path):
             commands.append('Up')
     return commands
 
-# For resuming
-pause = False
-exiting = False
-gover_sound = pygame.mixer.Sound("game over.wav")
-success_sound = pygame.mixer.Sound("success.wav")
-
-# Intialize the pygame
-pygame.init()   
-
-# create the screen
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-# Caption and Icon
-pygame.display.set_caption("Dinoventure")
-icon = pygame.image.load('dino.png')
-pygame.display.set_icon(icon)
-
-# Colors using RGB
-colors={
-    'white': (255,255,255), 'black': (0,0,0),
-    'green': (110,180,0), 'light green': (110,220,0),
-    'blue': (50,150,150), 'light blue': (80,210,180),       
-    'yellow': (255,225,0), 'purple': (140,50,225),
-    'red': (200,0,0), 'light red': (255,100,100),
-    'orange': (255,100,0), 'light pink': (255,110,180),
-    'grey': (220,240,240), 'pink': (255,60,150),
-    'light orange': (250,140,10), 'light purple': (180,100,210),
-    'light grey':(100, 100, 100), 'dark grey':(40, 40, 40),
-    'solid green':(0,255,0), 'solid red':(255,0,0),
-    'solid blue':(0,0,255)
-}
-
 ########################################################################################################################################
-
+# Code for riddle
 RiddleQ = {
     "Cash me outside, how about that?": 'bank', 
     "No man's land.": "female lounge" , 
@@ -197,17 +203,11 @@ RiddleA = {
 # This will keep a log of all the locations the  
 pathLog = []
 # Character Coordinates
-charcoords = {'academic block': (160, 32), 'playground': (382, 192), 'lab':(64, 544), 'ehsas centre':(800, 64), 'library':(928, 192), 'bank':(96, 192), 'playground':(384, 192), 'female lounge':(576, 288), 'fire courtyard':(64, 384), 'gym':(640, 384), 'baithak':(160, 608), 'zen garden':(640, 640), 'cafeteria': (864,448)}
+charcoords = {'academic block': (160, 32), 'playground': (382, 192), 'lab':(64, 544), 'ehsas':(800, 64), 'library':(928, 192), 'bank':(96, 192), 'playground':(384, 192), 'female lounge':(576, 288), 'fire courtyard':(64, 384), 'gym':(640, 384), 'baithak':(160, 608), 'zen garden':(640, 640), 'cafeteria': (864,448)}
 # List of all 12 locations
 allLocations = list(charcoords.keys())
 
 # Randomly making a stack of 4 locations
-def is_empty(stack):
-    if len(stack)==0:
-        return True
-    else:
-        return False
-
 def push(stack,item):
     stack.append(item)
 
@@ -418,7 +418,7 @@ def tkinterwrong(x):
 
     root.mainloop()
 
-def tkintererror():
+def tkintererror(x):
     global Answer
     root = Tk()
     root.resizable(0,0)
@@ -428,7 +428,7 @@ def tkintererror():
     myFont = font.Font(family='Fixedsys', size=12, weight='bold')
     def evaluate(event):
         root.destroy()
-    Label1 = Label(frame, text="You must go to the right person!")
+    Label1 = Label(frame, text="You must go to the right person!\nThe right person is at " + str(x))
     Label1.grid(row=0,column=0)
     Label1['font'] = myFont
 
@@ -484,7 +484,6 @@ def unpause():
     exiting = False
 
 def paused():
-    global colors
     pygame.mixer.music.pause()
     while pause:
         for event in pygame.event.get():
@@ -502,7 +501,6 @@ def paused():
         clock.tick(15) 
 
 def game_over():
-    global colors
     loop = True
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(gover_sound)
@@ -522,7 +520,6 @@ def game_over():
         clock.tick(15)
 
 def you_win():
-    global colors
     reset()
     loop = True
     pygame.mixer.music.stop()
@@ -543,7 +540,6 @@ def you_win():
         clock.tick(15)
 
 def instructions():
-    global colors
     loop = True
     while loop:
         for event in pygame.event.get():
@@ -575,7 +571,6 @@ def instructions():
         clock.tick(15)
 
 def story():
-    global colors
     loop = True
     while loop: 
         for event in pygame.event.get():
@@ -607,9 +602,8 @@ def story():
     
 # Game intro screen
 def game_intro():
-    global colors
     intro = True
-
+    reset()
     while intro:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -688,6 +682,7 @@ def game():
                         tkinternext()
                     else:
                         tkinterwrong(pathLog[-1].lower())
+                        tkinternext()
                         Score-=5
                     riddleNum += 1
                 elif event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY) == True:
@@ -698,11 +693,12 @@ def game():
                         tkinternext()
                     else:
                         tkinterwrong(pathLog[-1].lower())
+                        tkinternext()
                         Score-= 5
                     riddleNum += 1
                 elif event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY) == False:
                     Score -= 5
-                    tkintererror()
+                    tkintererror(pathLog[-1].lower())
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     playerX_change = 0
