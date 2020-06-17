@@ -12,19 +12,21 @@ clock = pygame.time.Clock()
 # Window Size, Player and FPS
 playerImg = pygame.image.load('dino.png')
 policeload = pygame.image.load('police.png')
-policeImg = pygame.transform.scale(policeload, (32, 36))
+policeImg = pygame.transform.scale(policeload, (32, 32))
 WIDTH = 1024
 HEIGHT = 768
 TILESIZE = 32
 Velocity = 32
-playerX = 64
-playerY = 64
-PoliceVel = 20 
-policeX = 64
-policeY = 96 
+playerX = 5*32
+playerY = 5*32
 playerX_change = 0
 playerY_change = 0
-FPS = 5
+# Police Settings
+policeX = 64
+policeY = 96 
+counter = 0
+##################
+FPS = 20
 Score = 50
 riddleNum = 0
 Answer = ''
@@ -40,18 +42,94 @@ x = open('Map.txt', 'r')
 x = x.read()
 x = x.split('\n')
 maps = []
-wallcoords = []
+nodes = {}
+# Making a graph
 for i in x:
     c = []
     for j in i:
         c+=j
     maps.append(c)
-for x in range(len(maps)):
-    for y in range(len(maps[0])):
-        if maps[x][y]=='@':
-            wallcoords.append((x*TILESIZE,y*TILESIZE))
+
+for y in range(len(maps)):
+    for x in range(len(maps[0])):
+        if maps[y][x]=='.' or maps[y][x]=='@':
+            nodes[(x,y)]=[]
         else:
             pass
+for y in range(len(maps)):
+    for x in range(len(maps[0])):
+        if maps[y][x]=='.' or maps[y][x]=='@':
+            if maps[y][x+1]=='.' or maps[y][x+1]=='@':
+                nodes[(x,y)]=nodes.get((x,y))+[(x+1,y,1)]
+                nodes[(x+1,y)]=nodes.get((x+1,y))+[(x,y,1)]
+            if maps[y+1][x]=='.' or maps[y+1][x]=='@':
+                nodes[(x,y)]=nodes.get((x,y))+[(x,y+1,1)]
+                nodes[(x,y+1)]=nodes.get((x,y+1))+[(x,y,1)]
+print(nodes)
+
+def reset():
+    global policeX, policeY, playerX, playerY, playerX_change, playerY_change
+    policeX = 64
+    policeY = 96 
+    playerX = 5*32
+    playerY = 5*32
+    playerX_change = 0
+    playerY_change = 0
+def Enqueue(Q,item):
+    Q.append(item)
+
+def Dequeue(Q):
+    return Q.pop(0)
+
+def is_empty(lst):
+    return len(lst)==0
+
+def Dijkstra(G,s):
+    dist = {}
+    for i in G:
+        dist[i]= ['',9999]
+    dist[s]=[s,0]
+    q = []
+    visited = []
+    Enqueue(q,s)
+    while is_empty(q)==False:
+        u = Dequeue(q)
+        for i in G[u]:
+            if dist[u][-1]+i[-1]<dist[i[:2]][-1] and u not in visited:
+                dist[i[:2]][-1]= dist[u][-1]+i[-1]
+                dist[i[:2]][0] = u
+                Enqueue(q,i[:2])
+        visited.append(u)
+    return dist
+
+def findshortestpath(nodes, policeX, policeY, playerX, playerY):
+    polxcor = policeX//TILESIZE
+    polycor = policeY//TILESIZE
+    chrxcor = playerX//TILESIZE
+    chrycor = playerY//TILESIZE
+    path = Dijkstra(nodes,(polxcor,polycor))
+    to = (chrxcor,chrycor)
+    lst = []
+    frm = (polxcor,polycor)
+    while to != frm:
+        lst.append((path[to][0],to,path[to][1]))
+        to = path[to][0]
+    return lst[::-1]
+
+def translator(path):
+    commands = []
+    for i in path:
+        frm = i[0]
+        to = i[1]
+        if (frm[0]+1,frm[1])==to:
+            commands.append('Right')
+        elif (frm[0]-1,frm[1])==to:
+            commands.append('Left')
+        elif (frm[0],frm[1]+1)==to:
+            commands.append('Down')
+        elif (frm[0],frm[1]-1)==to:
+            commands.append('Up')
+    return commands
 
 # For resuming
 pause = False
@@ -129,10 +207,13 @@ def is_empty(stack):
         return True
     else:
         return False
+
 def push(stack,item):
     stack.append(item)
+
 def pop(stack):
     return stack.pop()
+
 def top(stack):
     return lst[-1]
 nums = []
@@ -425,6 +506,7 @@ def game_over():
     loop = True
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(gover_sound)
+    reset()
     while loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -441,6 +523,7 @@ def game_over():
 
 def you_win():
     global colors
+    reset()
     loop = True
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(success_sound)
@@ -555,6 +638,9 @@ def game():
     global playerY_change
     global Score
     global riddleNum
+    global policeX
+    global policeY
+    global counter
     running = True
 
     # BackGround Sound
@@ -628,6 +714,23 @@ def game():
         if pc==False:
             playerX += playerX_change
             playerY += playerY_change
+        path = findshortestpath(nodes, policeX, policeY, playerX, playerY)
+        command = translator(path)
+        print(command)
+        if command==[]:
+            game_over()
+        else:
+            if counter%2==0:
+                counter = 0
+                if command[0]=='Up':
+                    policeY-=32
+                elif command[0]=='Down':
+                    policeY+=32
+                elif command[0]=='Right':
+                    policeX+=32
+                elif command[0]=='Left':
+                    policeX-=32
+        counter = counter + 1
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
