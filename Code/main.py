@@ -21,6 +21,8 @@ playerX = 5*32
 playerY = 5*32
 playerX_change = 0
 playerY_change = 0
+tick = 0
+Time = 0
 # Police Settings
 policeX = 32
 policeY = 32 
@@ -69,7 +71,7 @@ for y in range(len(maps)):
 
 # Restarting the Game
 def reset():
-    global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score
+    global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time, tick
     policeX = 32
     policeY = 32 
     playerX = 5*32
@@ -79,6 +81,8 @@ def reset():
     riddleNum = 0
     counter = 0
     Score = 20
+    TIME = 0
+    tick = 0
 
 #  For resuming
 pause = False
@@ -646,6 +650,7 @@ def game():
     global policeX
     global policeY
     global counter
+    global Time, tick
     running = True
 
     # BackGround Sound
@@ -658,7 +663,8 @@ def game():
         Map()
         
         # score 
-        draw_text('Score:' + str(Score), TILESIZE, colors['black'], screen, 60, 15,True)
+        draw_text('Score: ' + str(Score), TILESIZE, colors['black'], screen, 60, 15, True)
+        draw_text('TIME: ' + str(Time)+' s', TILESIZE, colors['black'], screen , WIDTH-100, 15, True)
         placesText()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -737,7 +743,10 @@ def game():
                     policeX+=32
                 elif command[0]=='Left':
                     policeX-=32
-        counter = counter + 1
+        if tick%FPS==0:
+            Time+=1
+        counter +=1
+        tick+=1
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
