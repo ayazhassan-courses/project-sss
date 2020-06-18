@@ -65,7 +65,7 @@ for y in range(len(maps)):
             if maps[y+1][x]=='.' or maps[y+1][x]=='@':
                 nodes[(x,y)]=nodes.get((x,y))+[(x,y+1,1)]
                 nodes[(x,y+1)]=nodes.get((x,y+1))+[(x,y,1)]
-print(nodes)
+# print(nodes)
 
 def reset():
     global policeX, policeY, playerX, playerY, playerX_change, playerY_change
@@ -197,7 +197,7 @@ RiddleA = {
 # This will keep a log of all the locations the  
 pathLog = []
 # Character Coordinates
-charcoords = {'academic block': (160, 32), 'playground': (382, 192), 'lab':(64, 544), 'ehsas centre':(800, 64), 'library':(928, 192), 'bank':(96, 192), 'playground':(384, 192), 'female lounge':(576, 288), 'fire courtyard':(64, 384), 'gym':(640, 384), 'baithak':(160, 608), 'zen garden':(640, 640), 'cafeteria': (864,448)}
+charcoords = {'academic block': (160, 32), 'playground': (382, 192), 'lab':(64, 544), 'ehsas':(800, 64), 'library':(928, 192), 'bank':(96, 192), 'playground':(384, 192), 'female lounge':(576, 288), 'fire courtyard':(64, 384), 'gym':(640, 384), 'baithak':(160, 608), 'zen garden':(640, 640), 'cafeteria': (864,448)}
 # List of all 12 locations
 allLocations = list(charcoords.keys())
 
@@ -217,11 +217,11 @@ def pop(stack):
 def top(stack):
     return lst[-1]
 nums = []
+locations = []
 while len(nums) < 4:
     x = random.randint(0,11)
     if x not in nums:
         nums.append(x)
-locations = []
 for num in nums:
     push(locations, allLocations[num])
 
@@ -716,7 +716,7 @@ def game():
             playerY += playerY_change
         path = findshortestpath(nodes, policeX, policeY, playerX, playerY)
         command = translator(path)
-        print(command)
+        # print(command)
         if command==[]:
             game_over()
         else:
