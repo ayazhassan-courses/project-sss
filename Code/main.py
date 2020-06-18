@@ -21,14 +21,16 @@ playerX = 5*32
 playerY = 5*32
 playerX_change = 0
 playerY_change = 0
-tick = 0
-Time = 0
+
+#The maximum play time for a round in seconds
+PLAY_TIME = 100
+
 # Police Settings
 policeX = 32
 policeY = 32 
 counter = 0
 FPS = 20
-Score = 20
+Score = 10
 riddleNum = 0
 Answer = ''
 
@@ -67,7 +69,6 @@ for y in range(len(maps)):
             if maps[y+1][x]=='.' or maps[y+1][x]=='@':
                 nodes[(x,y)]=nodes.get((x,y))+[(x,y+1,1)]
                 nodes[(x,y+1)]=nodes.get((x,y+1))+[(x,y,1)]
-# print(nodes)
 
 # Restarting the Game
 def reset():
@@ -80,9 +81,7 @@ def reset():
     playerY_change = 0
     riddleNum = 0
     counter = 0
-    Score = 20
-    TIME = 0
-    tick = 0
+    Score = 10
 
 #  For resuming
 pause = False
@@ -223,10 +222,7 @@ def top(stack):
 nums = []
 locations = []
 def questions():
-    global nums
-    global locations
-    global pathLog
-    global riddleNum
+    global nums, locations, pathLog, riddleNum 
     nums = []
     locations = []
     pathLog = []
@@ -238,6 +234,7 @@ def questions():
     for num in nums:
         push(locations, allLocations[num])
 questions()
+
 # Helper to check if player went to the place he was told
 def playerorder(playerX, playerY):
     if (playerX,playerY) == charcoords[pathLog[-1]]:
@@ -246,6 +243,7 @@ def playerorder(playerX, playerY):
         return False
         
 ########################################################################################################################################
+# GUI Functions
 def draw_text(text, size, color, surface, x, y, center):
     font = pygame.font.SysFont(None, size)
     textobj = font.render(text, 1, color)
@@ -257,7 +255,6 @@ def draw_text(text, size, color, surface, x, y, center):
     surface.blit(textobj, textrect)
 
 def button(msg,x,y,w,h,ic,ac,action=None):
-    global pause # hard coding for pause button
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
@@ -513,7 +510,7 @@ def paused():
         pygame.display.update()
         clock.tick(15) 
 
-def game_over():
+def game_over(msg, Score):
     loop = True
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(gover_sound)
@@ -526,14 +523,16 @@ def game_over():
                 sys.exit()
 
         screen.fill(colors['black'])
-        draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 180, True)
-        button('Exit',WIDTH//2-50 , HEIGHT//2-45, 100, 50, colors['orange'],colors['light orange'], quit_game)
-        button('Main Menu',WIDTH//2-75, HEIGHT//2-130, 150, 50, colors['orange'],colors['light orange'], game_intro)
+        draw_text(msg, 45, colors['red'], screen, WIDTH//2, 180, True )
+        draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 245, True)
+        draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
+        button('Exit',WIDTH//2-50 , HEIGHT//2, 100, 50, colors['orange'],colors['light orange'], quit_game)
+        button('Main Menu',WIDTH//2-75, HEIGHT//2-80, 150, 50, colors['orange'],colors['light orange'], game_intro)
         
         pygame.display.update()
         clock.tick(15)
 
-def you_win():
+def you_win(Score):
     reset()
     questions()
     loop = True
@@ -546,6 +545,7 @@ def you_win():
                 sys.exit()
 
         screen.fill(colors['black'])
+        draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
         draw_text('Congratulations, you helped Dino find his friend!',45,colors['pink'], screen, WIDTH//2, 150, True)
         draw_text('YOU WIN!',80,colors['pink'], screen, WIDTH//2, 220, True)
         button('Exit',WIDTH//2-50 , HEIGHT//2-20, 100, 50, colors['purple'],colors['light purple'], quit_game)
@@ -637,7 +637,7 @@ def game_intro():
         clock.tick(15)
 
 #####################################################################################################################################
-# Game Loop
+######################################################## Game Main Loop #############################################################
 def game():
     global pause
     # global exiting
@@ -656,15 +656,32 @@ def game():
     # BackGround Sound
     pygame.mixer.music.load('background.wav')
     pygame.mixer.music.play(-1)
+
+    #Stores the start time of the game in milliseconds
+    start_time = pygame.time.get_ticks() 
     while running:
         # This will delay the game the given amount of milliseconds. In our casee 0.1 seconds will be the delay
         clock.tick(FPS)
         screen.fill(colors['black'])
         Map()
         
+        #Check if Games time is up (it has been more than 30 seconds from when we started the game)
+        if (start_time + (PLAY_TIME * 1000) <= pygame.time.get_ticks()):
+            game_over('Your time\'s up', Score)
+
         # score 
         draw_text('Score: ' + str(Score), TILESIZE, colors['black'], screen, 60, 15, True)
-        draw_text('TIME: ' + str(Time)+' s', TILESIZE, colors['black'], screen , WIDTH-100, 15, True)
+
+        #Calculate how much time is left by subtracting the current time
+        #from the start time, and then this value from the maximum allowed time (30 seconds).
+        #As these times are stored in milliseconds, we then
+        #divide by 1000 to convert to seconds, and convert the result to an integer
+        #value so that only whole seconds are shown.
+        time_left = pygame.time.get_ticks() - start_time #find out how much time has passed since the start of the game
+        time_left = time_left / 1000 #Convert this time from milliseconds to seconds
+        time_left = PLAY_TIME - time_left #Find out how much time is remaining by subtracting total time from time thats passed
+        time_left = int(time_left) #Convert this value to an integer
+        draw_text('Time Left: ' + str(time_left)+' s', TILESIZE, colors['black'], screen , WIDTH-120, 15, True)
         placesText()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -688,9 +705,9 @@ def game():
                     pause = True
                     paused()
                 if Score == 0:
-                    game_over()
+                    game_over('Oops! You lost all your points', Score)
                 if riddleNum == 4 and playerorder(playerX, playerY) == True:
-                    you_win()
+                    you_win(Score)
                 if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True  and riddleNum == 0: 
                     tkinterfunction()
                     if Answer == pathLog[-1].lower():
@@ -722,16 +739,15 @@ def game():
                 if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
                     playerY_change = 0
             if (playerX,playerY) == (policeX,policeY):
-                    game_over()
+                    game_over('Oops! The University Security caught Dino', Score)
         pc = wallcollide(playerX,playerY,playerX_change,playerY_change)
         if pc==False:
             playerX += playerX_change
             playerY += playerY_change
         path = findshortestpath(nodes, policeX, policeY, playerX, playerY)
         command = translator(path)
-        # print(command)
         if command==[]:
-            game_over()
+            game_over('Oops! The University Security caught Dino', Score)
         else:
             if counter%2==0:
                 counter = 0
@@ -743,10 +759,7 @@ def game():
                     policeX+=32
                 elif command[0]=='Left':
                     policeX-=32
-        if tick%FPS==0:
-            Time+=1
         counter +=1
-        tick+=1
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
