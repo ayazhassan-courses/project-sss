@@ -69,7 +69,7 @@ for y in range(len(maps)):
 
 # Restarting the Game
 def reset():
-    global policeX, policeY, playerX, playerY, playerX_change, playerY_change
+    global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score
     policeX = 32
     policeY = 32 
     playerX = 5*32
@@ -215,16 +215,25 @@ def pop(stack):
     return stack.pop()
 
 def top(stack):
-    return lst[-1]
+    return stack[-1]
 nums = []
 locations = []
-while len(nums) < 4:
-    x = random.randint(0,11)
-    if x not in nums:
-        nums.append(x)
-for num in nums:
-    push(locations, allLocations[num])
-
+def questions():
+    global nums
+    global locations
+    global pathLog
+    global riddleNum
+    nums = []
+    locations = []
+    pathLog = []
+    riddleNum = 0
+    while len(nums) < 4:
+        x = random.randint(0,11)
+        if x not in nums:
+            nums.append(x)
+    for num in nums:
+        push(locations, allLocations[num])
+questions()
 # Helper to check if player went to the place he was told
 def playerorder(playerX, playerY):
     if (playerX,playerY) == charcoords[pathLog[-1]]:
@@ -505,6 +514,7 @@ def game_over():
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(gover_sound)
     reset()
+    questions()
     while loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -521,6 +531,7 @@ def game_over():
 
 def you_win():
     reset()
+    questions()
     loop = True
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(success_sound)
