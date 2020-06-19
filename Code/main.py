@@ -250,8 +250,8 @@ def playerorder(playerX, playerY):
         
 ########################################################################################################################################
 # GUI Functions
-def draw_text(text, size, color, surface, x, y, center):
-    font = pygame.font.SysFont(None, size)
+def draw_text(text, size, color, surface, x, y, center, Font=None):
+    font = pygame.font.Font(Font, size)
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect()
     if center==True:
@@ -537,7 +537,7 @@ def game_over(msg, Score):
 
         screen.fill(colors['black'])
         draw_text(msg, 45, colors['red'], screen, WIDTH//2, 180, True )
-        draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 245, True)
+        draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 245, True, 'Pokemon_GB.ttf')
         draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
         button('Main Menu',WIDTH//2-75, HEIGHT//2-80, 150, 50, colors['orange'],colors['light orange'], game_intro)
         button('Exit',WIDTH//2-50 , HEIGHT//2, 100, 50, colors['orange'],colors['light orange'], quit_game)
@@ -560,7 +560,7 @@ def you_win(Score):
         screen.fill(colors['black'])
         draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
         draw_text('Congratulations, you helped Dino find his friend!',45,colors['pink'], screen, WIDTH//2, 150, True)
-        draw_text('YOU WIN!',80,colors['pink'], screen, WIDTH//2, 220, True)
+        draw_text('YOU WIN!',80,colors['pink'], screen, WIDTH//2, 220, True, 'Pokemon_GB.ttf')
         button('Exit',WIDTH//2-50 , HEIGHT//2-20, 100, 50, colors['purple'],colors['light purple'], quit_game)
         button('Main Menu',WIDTH//2-75, HEIGHT//2-105, 150, 50, colors['purple'],colors['light purple'], game_intro)
     
@@ -640,7 +640,7 @@ def game_intro():
 
         screen.fill(colors['black'])
   
-        draw_text('DINOVENTURE', 80, colors['orange'], screen, WIDTH//2, 150, True)    
+        draw_text('DINOVENTURE', 80, colors['orange'], screen, WIDTH//2, 150, True, 'Pokemon_GB.ttf')    
         button('New Game',WIDTH//2 - 170//2,235,160,50, colors['blue'], colors['light blue'], game)
         button('Rules and Controls',WIDTH//2 - 230//2,330,220,50,colors['blue'], colors['light blue'], instructions)
         button('Story',WIDTH//2 - 75//2-2,425,75,50,colors['blue'], colors['light blue'], story)
@@ -775,7 +775,6 @@ def game():
                 elif command[0]=='Left':
                     policeX-=32
         counter +=1
-        print(playerX,playerY)
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
