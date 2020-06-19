@@ -19,13 +19,13 @@ Answer = ''
 
 # Player
 Velocity = 32
-playerX = 5*32
-playerY = 5*32
+playerX = 25*32
+playerY = 18*32
 playerX_change = 0
 playerY_change = 0
 
 #The maximum play time for a round in seconds
-PLAY_TIME = 180
+PLAY_TIME = 100
 Time_elapsed = 0
 Time_paused  = 0
 start_time = 0
@@ -76,11 +76,11 @@ for y in range(len(maps)):
 
 # Restarting the Game
 def reset():
-    global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time_elapsed, Time_paused, start_time
+    global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time_elapsed, Time_paused, start_time, PLAY_TIME
     policeX = 32
     policeY = 32 
-    playerX = 5*32
-    playerY = 5*32
+    playerX = 25*32
+    playerY = 18*32
     playerX_change = 0
     playerY_change = 0
     riddleNum = 0
@@ -89,6 +89,7 @@ def reset():
     Time_paused = 0
     Time_elapsed = 0
     start_time = 0
+    PLAY_TIME = 100
 
 # For resuming
 pause = False
@@ -757,6 +758,7 @@ def game():
         if command == []:
             game_over('Oops! The University Security caught Dino', Score)
         else:
+            if counter%2==0:
                 if command[0] == 'Up':
                     policeY -= 32
                 elif command[0] == 'Down':
