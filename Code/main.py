@@ -17,8 +17,8 @@ WIDTH = 1024
 HEIGHT = 768
 TILESIZE = 32
 Velocity = 32
-playerX = 25*32
-playerY = 18*32
+playerX = 5*32
+playerY = 5*32
 playerX_change = 0
 playerY_change = 0
 
@@ -78,8 +78,8 @@ def reset():
     global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time_elapsed, Time_paused, start_time
     policeX = 32
     policeY = 32 
-    playerX = 25*32
-    playerY = 18*32
+    playerX = 5*32
+    playerY = 5*32
     playerX_change = 0
     playerY_change = 0
     riddleNum = 0
@@ -539,8 +539,8 @@ def game_over(msg, Score):
         draw_text(msg, 45, colors['red'], screen, WIDTH//2, 180, True )
         draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 245, True)
         draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
-        button('Main Menu',WIDTH//2-75, HEIGHT//2-80, 150, 50, colors['orange'],colors['light orange'], game_intro)
         button('Exit',WIDTH//2-50 , HEIGHT//2, 100, 50, colors['orange'],colors['light orange'], quit_game)
+        button('Main Menu',WIDTH//2-75, HEIGHT//2-80, 150, 50, colors['orange'],colors['light orange'], game_intro)
         
         pygame.display.update()
         clock.tick(15)
@@ -577,21 +577,18 @@ def instructions():
 
         screen.fill(colors['black'])
         draw_text('Instructions',50,colors['purple'], screen, WIDTH//2, 50, True)
-        draw_text('• You are given 20 points initially.',25,colors['light blue'],screen,260,114,True)
+        draw_text('• You are given 10 points initially.',25,colors['light blue'],screen,260,114,True)
         draw_text('• There are 3 destinations that Dino must visit (i.e 3 riddles).',25,colors['light blue'],screen,370,144,True)
-        draw_text('• Upon reaching each destination, a new riddle will pop up.',25,colors['light blue'],screen,361,174,True)
+        draw_text('• At each destination, you will meet a student. Click on the space bar and a new riddle will pop up.',25,colors['light blue'],screen,521,174,True)
         draw_text('• Solve each riddle correctly to know where to go next.',25,colors['light blue'],screen,343,204,True)
         draw_text('• Use the up,down,left,right keys in order to move Dino in the respective directions.',25,colors['light blue'],screen,460,234,True)
         draw_text('• Once Dino meets his friend without being caught, you win.',25,colors['light blue'],screen,366,264,True)
         draw_text('• If Dino is caught by a security guard, you lose.',25,colors['light blue'],screen,316,294,True)
         draw_text('Rules',50,colors['purple'], screen, WIDTH//2, 350, True)
-        draw_text('• Cost of one hint is: 10 points. Cost of slowing down the guards speed: 5 points.',25,colors['light blue'],screen,452,390,True)
-        draw_text('• Security guards are at random places and on the watch, try to keep Dino out of their way.',25,colors['light blue'],screen,490,420,True)
-        draw_text('• You will be timed! If you take too long on a riddle, the security guards can spot Dino.',25,colors['light blue'],screen,472,450,True)
-        draw_text('• If any guard spots Dino, they will chase him.',25,colors['light blue'],screen,307,480,True)
-        draw_text('• If time runs out while solving a riddle, a guard will automatically catch Dino.',25,colors['light blue'],screen,440,510,True)
-        draw_text('• If your points run out, you have no choice but to solve riddles without a hint and keep',25,colors['light blue'],screen,475,540,True)
-        draw_text('Dino out of the sight of guards but the game will continue.',25,colors['light blue'],screen,368,570,True)
+        draw_text('• You will be timed! Solve riddles as quickly as possible.',25,colors['light blue'],screen,348,390,True)
+        draw_text('• If time runs out while solving a riddle, a guard will automatically catch Dino.',25,colors['light blue'],screen,440,420,True)
+        draw_text('• There will be a deduction of 5 points for every riddle incorrectly answered and if you go to the',25,colors['light blue'],screen,508,450,True)
+        draw_text('wrong destination aswell. If your points run out, it is game over.',25,colors['light blue'],screen,394,480,True)
 
         button('Main Menu',720, 600, 120, 50, colors['green'],colors['light green'], game_intro)
         
@@ -611,18 +608,18 @@ def story():
         draw_text('A Dino had a rough day and goes out for a walk.',25,colors['white'],screen,260,144,True)
         draw_text('Lost in his thoughts, he loses track of where he is and',25,colors['white'],screen,680,144,True)
         draw_text('ends up entering Habib University.',25,colors['white'],screen,210,165,True)
-        draw_text('He has entered HU accidentally and has realised that the security is tight',25,colors['white'],screen,663,165,True)
-        draw_text('and anyone caught will be questioned. Dino is worried because he is unaware of ',25,colors['white'],screen,393,187,True)
-        draw_text('what the security might do.',25,colors['white'],screen,835,187,True)
-        draw_text('Luckily, Dino knows a student in HU and he is sure that his friend will help him escape!',25,colors['white'],screen,422,208,True)
+        draw_text('He has entered HU accidentally and has realised that the security has',25,colors['white'],screen,647,165,True)
+        draw_text('spotted him and is now after him. Dino is worried because he is unaware of ',25,colors['white'],screen,374,187,True)
+        draw_text('what the security might do.',25,colors['white'],screen,800,187,True)
+        draw_text('Luckily, Dino knows a student in HU and he is sure that his friend will help him escape!',25,colors['white'],screen,424,208,True)
         draw_text('However,',25,colors['white'],screen,820,208,True)
-        draw_text('he doesn’t know where he is.',25,colors['white'],screen,182,228,True)
+        draw_text('he doesn’t know where to go.',25,colors['white'],screen,184,228,True)
         draw_text('You are to help Dino find his friend!',30,colors['light red'],screen,515,260,True)
-        draw_text('It is your responsibility to navigate Dino and help him keep out of the sight of others especially security guards.',25,colors['white'],screen,525,300,True)
-        draw_text('In order to help, you will be given riddles based on the HU campus. The solution of each',25,colors['white'],screen,424,320,True)
+        draw_text('It is your responsibility to navigate Dino and make sure he is not caught by security guard that is after him.',25,colors['white'],screen,502,300,True)
+        draw_text('In order to help, you will be given riddles based on the HU campus. The solution of each',25,colors['white'],screen,420,320,True)
         draw_text('riddle is the destination',25,colors['white'],screen,885,320,True)
-        draw_text('you must go to where you will be given another riddle. These riddles will lead Dino to his friend who will tell him',25,colors['white'],screen,525,342,True)
-        draw_text('where the exit is. Make sure to watch out for security guards!',25,colors['white'],screen,318,362,True)
+        draw_text('you must go to where you will be given another riddle. These riddles will lead Dino to his friend who will tell him',25,colors['white'],screen,520,342,True)
+        draw_text('where the exit is. Make sure Dino is not caught by the security!',25,colors['white'],screen,318,362,True)
         button('Main Menu',680, 520, 120, 50, colors['green'],colors['light green'], game_intro)
         
         pygame.display.update()
@@ -775,10 +772,8 @@ def game():
                 elif command[0]=='Left':
                     policeX-=32
         counter +=1
-        print(playerX,playerY)
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
 
 game_intro()
-
