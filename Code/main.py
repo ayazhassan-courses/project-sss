@@ -8,34 +8,35 @@ import tkinter.messagebox
 pygame.mixer.init()
 clock = pygame.time.Clock()
 
-
-# Window Size, Player and FPS
+# Window Size and 
 playerImg = pygame.image.load('dino.png')
-policeload = pygame.image.load('police.png')
-policeImg = pygame.transform.scale(policeload, (32, 32))
 WIDTH = 1024
 HEIGHT = 768
 TILESIZE = 32
+Score = 10
+riddleNum = 0
+Answer = ''
+
+# Player
 Velocity = 32
-playerX = 25*32
-playerY = 18*32
+playerX = 5*32
+playerY = 5*32
 playerX_change = 0
 playerY_change = 0
 
 #The maximum play time for a round in seconds
-PLAY_TIME = 100
+PLAY_TIME = 180
 Time_elapsed = 0
 Time_paused  = 0
 start_time = 0
 
-# Police Settings
+# Police Settings and FPS
+policeload = pygame.image.load('police.png')
+policeImg = pygame.transform.scale(policeload, (32, 32))
 policeX = 32
 policeY = 32 
 counter = 0
 FPS = 20
-Score = 10
-riddleNum = 0
-Answer = ''
 
 def player(x,y):
     screen.blit(playerImg, (x, y))
@@ -50,7 +51,7 @@ x = x.split('\n')
 maps = []
 nodes = {}
 
-# Making a graph
+# Making Map
 for i in x:
     c = []
     for j in i:
@@ -78,8 +79,8 @@ def reset():
     global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time_elapsed, Time_paused, start_time
     policeX = 32
     policeY = 32 
-    playerX = 25*32
-    playerY = 18*32
+    playerX = 5*32
+    playerY = 5*32
     playerX_change = 0
     playerY_change = 0
     riddleNum = 0
@@ -89,16 +90,15 @@ def reset():
     Time_elapsed = 0
     start_time = 0
 
-#  For resuming
+# For resuming
 pause = False
-exiting = False
 gover_sound = pygame.mixer.Sound("game over.wav")
 success_sound = pygame.mixer.Sound("success.wav")
 
 # Intialize the pygame
 pygame.init()   
 
-# create the screen
+# Create the screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Caption and Icon
@@ -227,6 +227,7 @@ def top(stack):
     return stack[-1]
 nums = []
 locations = []
+
 def questions():
     global nums, locations, pathLog, riddleNum 
     nums = []
@@ -239,6 +240,7 @@ def questions():
             nums.append(x)
     for num in nums:
         push(locations, allLocations[num])
+
 questions()
 
 # Helper to check if player went to the place he was told
@@ -313,6 +315,28 @@ def Map():
             else:
                 pass
 
+def placesText():
+    draw_text('Ehsas', 27, colors['white'], screen, 880, 110, True)
+    draw_text('Reception', 27, colors['white'], screen, 605, 100, True)
+    draw_text('Academic', 25, colors['white'], screen, 175, 95, True)    
+    draw_text('Block', 24, colors['white'], screen, 175, 115, True)
+    draw_text('Bank', 25, colors['white'], screen, 175, 207, True)
+    draw_text('Fire', 25, colors['white'], screen, 140, 370, True)
+    draw_text('Courtyard', 25, colors['white'], screen, 145, 395, True)
+    draw_text('Playground', 30, colors['white'], screen, 508, 223, True)
+    draw_text('Female Lounge', 30, colors['white'], screen, 430, 320, True)
+    draw_text('Gym', 35, colors['white'], screen, 460, 415, True)
+    draw_text('Library', 38, colors['white'], screen, 812, 240, True)
+    draw_text('Cafe2go', 25, colors['white'], screen, 880, 350, True)
+    draw_text('Cafeteria', 25, colors['white'], screen, 910, 520, True)
+    draw_text('Classroom', 30, colors['white'], screen, 688, 545, True)
+    draw_text('Zen Garden', 31, colors['white'], screen, 803, 657, True)
+    draw_text('Court', 30, colors['white'], screen, 270, 595, True)
+    draw_text('Court', 30, colors['white'], screen, 430, 595, True)
+    draw_text('Baithak', 22, colors['white'], screen, 129, 640, True)
+    draw_text('Lab', 25, colors['white'], screen, 128, 542, True)
+    draw_text('Auditorium', 25, colors['white'], screen, 399, 109, True)
+    
 def wallcollide(playerX, playerY, playerX_change, playerY_change):
     global maps
     wallChars = '-+!$%#'
@@ -350,30 +374,9 @@ def playerInteraction(playerX, playerY):
         return True
     else:
         return False
-
-def placesText():
-    draw_text('Ehsas', 27, colors['white'], screen, 880, 110, True)
-    draw_text('Reception', 27, colors['white'], screen, 605, 100, True)
-    draw_text('Academic', 25, colors['white'], screen, 175, 95, True)    
-    draw_text('Block', 24, colors['white'], screen, 175, 115, True)
-    draw_text('Bank', 25, colors['white'], screen, 175, 207, True)
-    draw_text('Fire', 25, colors['white'], screen, 140, 370, True)
-    draw_text('Courtyard', 25, colors['white'], screen, 145, 395, True)
-    draw_text('Playground', 30, colors['white'], screen, 508, 223, True)
-    draw_text('Female Lounge', 30, colors['white'], screen, 430, 320, True)
-    draw_text('Gym', 35, colors['white'], screen, 460, 415, True)
-    draw_text('Library', 38, colors['white'], screen, 812, 240, True)
-    draw_text('Cafe2go', 25, colors['white'], screen, 880, 350, True)
-    draw_text('Cafeteria', 25, colors['white'], screen, 910, 520, True)
-    draw_text('Classroom', 30, colors['white'], screen, 688, 545, True)
-    draw_text('Zen Garden', 31, colors['white'], screen, 803, 657, True)
-    draw_text('Court', 30, colors['white'], screen, 270, 595, True)
-    draw_text('Court', 30, colors['white'], screen, 430, 595, True)
-    draw_text('Baithak', 22, colors['white'], screen, 129, 640, True)
-    draw_text('Lab', 25, colors['white'], screen, 128, 542, True)
-    draw_text('Auditorium', 25, colors['white'], screen, 399, 109, True)
     
 ########################################################################################################################################
+# Tkinter Functions
 def tkinternext():
     root = Tk()
     root.resizable(0,0)
@@ -486,6 +489,7 @@ def tkinterfunction():
 
     root.mainloop()
 ##########################################################################################################################################
+########################################################### All Menus ####################################################################
 # Quiting function for buttons
 def quit_game():
     pygame.quit()
@@ -515,10 +519,10 @@ def paused():
                 sys.exit()
                 
         screen.fill(colors['black'])
-        draw_text('Paused',50,colors['white'], screen, WIDTH//2, 180, True)
-        button('Exit',WIDTH//2-50 , 600//2-25+100, 100, 50, colors['pink'],colors['light pink'], quit_game)
-        button('Main Menu',WIDTH//2-75, 600//2-25+25, 150, 50, colors['pink'],colors['light pink'], game_intro)
-        button('Resume',WIDTH//2-50, 600//2-25-50, 100, 50, colors['pink'],colors['light pink'], unpause)
+        draw_text('Paused',60,colors['white'], screen, WIDTH//2, 220, True)
+        button('Exit',WIDTH//2-50 , 220+50+200, 100, 50, colors['pink'],colors['light pink'], quit_game)
+        button('Main Menu',WIDTH//2-75, 220+50+100, 150, 50, colors['pink'],colors['light pink'], game_intro)
+        button('Resume',WIDTH//2-50, 220+50, 100, 50, colors['pink'],colors['light pink'], unpause)
         
         pygame.display.update()
         clock.tick(FPS) 
@@ -536,11 +540,11 @@ def game_over(msg, Score):
                 sys.exit()
 
         screen.fill(colors['black'])
-        draw_text(msg, 45, colors['red'], screen, WIDTH//2, 180, True )
-        draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 245, True, 'Pokemon_GB.ttf')
+        draw_text(msg, 45, colors['red'], screen, WIDTH//2, 150, True )
+        draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 220, True, 'Pokemon_GB.ttf')
         draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
-        button('Main Menu',WIDTH//2-75, HEIGHT//2-80, 150, 50, colors['orange'],colors['light orange'], game_intro)
-        button('Exit',WIDTH//2-50 , HEIGHT//2, 100, 50, colors['orange'],colors['light orange'], quit_game)
+        button('Exit',WIDTH//2-50 , 220+50+100, 100, 50, colors['orange'],colors['light orange'], quit_game)
+        button('Main Menu',WIDTH//2-75, 220+50, 150, 50, colors['orange'],colors['light orange'], game_intro)
         
         pygame.display.update()
         clock.tick(15)
@@ -561,8 +565,8 @@ def you_win(Score):
         draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
         draw_text('Congratulations, you helped Dino find his friend!',45,colors['pink'], screen, WIDTH//2, 150, True)
         draw_text('YOU WIN!',80,colors['pink'], screen, WIDTH//2, 220, True, 'Pokemon_GB.ttf')
-        button('Exit',WIDTH//2-50 , HEIGHT//2-20, 100, 50, colors['purple'],colors['light purple'], quit_game)
-        button('Main Menu',WIDTH//2-75, HEIGHT//2-105, 150, 50, colors['purple'],colors['light purple'], game_intro)
+        button('Exit',WIDTH//2-50 , 220+50+100, 100, 50, colors['purple'],colors['light purple'], quit_game)
+        button('Main Menu',WIDTH//2-75, 220+50, 150, 50, colors['purple'],colors['light purple'], game_intro)
     
         pygame.display.update()
         clock.tick(15)
@@ -577,21 +581,18 @@ def instructions():
 
         screen.fill(colors['black'])
         draw_text('Instructions',50,colors['purple'], screen, WIDTH//2, 50, True)
-        draw_text('• You are given 20 points initially.',25,colors['light blue'],screen,260,114,True)
-        draw_text('• There are 3 destinations that Dino must visit (i.e 3 riddles).',25,colors['light blue'],screen,370,144,True)
-        draw_text('• Upon reaching each destination, a new riddle will pop up.',25,colors['light blue'],screen,361,174,True)
+        draw_text('• You are given 10 points initially.',25,colors['light blue'],screen,260,114,True)
+        draw_text('• There are 4 destinations that Dino must visit (i.e 4 riddles).',25,colors['light blue'],screen,370,144,True)
+        draw_text('• At each destination, you will meet a student. Click on the space bar and a new riddle will pop up.',25,colors['light blue'],screen,521,174,True)
         draw_text('• Solve each riddle correctly to know where to go next.',25,colors['light blue'],screen,343,204,True)
         draw_text('• Use the up,down,left,right keys in order to move Dino in the respective directions.',25,colors['light blue'],screen,460,234,True)
         draw_text('• Once Dino meets his friend without being caught, you win.',25,colors['light blue'],screen,366,264,True)
         draw_text('• If Dino is caught by a security guard, you lose.',25,colors['light blue'],screen,316,294,True)
         draw_text('Rules',50,colors['purple'], screen, WIDTH//2, 350, True)
-        draw_text('• Cost of one hint is: 10 points. Cost of slowing down the guards speed: 5 points.',25,colors['light blue'],screen,452,390,True)
-        draw_text('• Security guards are at random places and on the watch, try to keep Dino out of their way.',25,colors['light blue'],screen,490,420,True)
-        draw_text('• You will be timed! If you take too long on a riddle, the security guards can spot Dino.',25,colors['light blue'],screen,472,450,True)
-        draw_text('• If any guard spots Dino, they will chase him.',25,colors['light blue'],screen,307,480,True)
-        draw_text('• If time runs out while solving a riddle, a guard will automatically catch Dino.',25,colors['light blue'],screen,440,510,True)
-        draw_text('• If your points run out, you have no choice but to solve riddles without a hint and keep',25,colors['light blue'],screen,475,540,True)
-        draw_text('Dino out of the sight of guards but the game will continue.',25,colors['light blue'],screen,368,570,True)
+        draw_text('• You will be timed! Solve riddles as quickly as possible.',25,colors['light blue'],screen,348,390,True)
+        draw_text('• If time runs out while solving a riddle, a guard will automatically catch Dino.',25,colors['light blue'],screen,440,420,True)
+        draw_text('• There will be a deduction of 5 points for every riddle incorrectly answered and if you go to the',25,colors['light blue'],screen,508,450,True)
+        draw_text('wrong destination aswell. If your points run out, it is game over.',25,colors['light blue'],screen,394,480,True)
 
         button('Main Menu',720, 600, 120, 50, colors['green'],colors['light green'], game_intro)
         
@@ -611,18 +612,18 @@ def story():
         draw_text('A Dino had a rough day and goes out for a walk.',25,colors['white'],screen,260,144,True)
         draw_text('Lost in his thoughts, he loses track of where he is and',25,colors['white'],screen,680,144,True)
         draw_text('ends up entering Habib University.',25,colors['white'],screen,210,165,True)
-        draw_text('He has entered HU accidentally and has realised that the security is tight',25,colors['white'],screen,663,165,True)
-        draw_text('and anyone caught will be questioned. Dino is worried because he is unaware of ',25,colors['white'],screen,393,187,True)
-        draw_text('what the security might do.',25,colors['white'],screen,835,187,True)
-        draw_text('Luckily, Dino knows a student in HU and he is sure that his friend will help him escape!',25,colors['white'],screen,422,208,True)
+        draw_text('He has entered HU accidentally and has realised that the security has',25,colors['white'],screen,647,165,True)
+        draw_text('spotted him and is now after him. Dino is worried because he is unaware of ',25,colors['white'],screen,374,187,True)
+        draw_text('what the security might do.',25,colors['white'],screen,800,187,True)
+        draw_text('Luckily, Dino knows a student in HU and he is sure that his friend will help him escape!',25,colors['white'],screen,424,208,True)
         draw_text('However,',25,colors['white'],screen,820,208,True)
-        draw_text('he doesn’t know where he is.',25,colors['white'],screen,182,228,True)
+        draw_text('he doesn’t know where to go.',25,colors['white'],screen,184,228,True)
         draw_text('You are to help Dino find his friend!',30,colors['light red'],screen,515,260,True)
-        draw_text('It is your responsibility to navigate Dino and help him keep out of the sight of others especially security guards.',25,colors['white'],screen,525,300,True)
-        draw_text('In order to help, you will be given riddles based on the HU campus. The solution of each',25,colors['white'],screen,424,320,True)
+        draw_text('It is your responsibility to navigate Dino and make sure he is not caught by security guard that is after him.',25,colors['white'],screen,502,300,True)
+        draw_text('In order to help, you will be given riddles based on the HU campus. The solution of each',25,colors['white'],screen,420,320,True)
         draw_text('riddle is the destination',25,colors['white'],screen,885,320,True)
-        draw_text('you must go to where you will be given another riddle. These riddles will lead Dino to his friend who will tell him',25,colors['white'],screen,525,342,True)
-        draw_text('where the exit is. Make sure to watch out for security guards!',25,colors['white'],screen,318,362,True)
+        draw_text('you must go to where you will be given another riddle. These riddles will lead Dino to his friend who will tell him',25,colors['white'],screen,520,342,True)
+        draw_text('where the exit is. Make sure Dino is not caught by the security!',25,colors['white'],screen,318,362,True)
         button('Main Menu',680, 520, 120, 50, colors['green'],colors['light green'], game_intro)
         
         pygame.display.update()
@@ -641,9 +642,9 @@ def game_intro():
         screen.fill(colors['black'])
   
         draw_text('DINOVENTURE', 80, colors['orange'], screen, WIDTH//2, 150, True, 'Pokemon_GB.ttf')    
-        button('New Game',WIDTH//2 - 170//2,235,160,50, colors['blue'], colors['light blue'], game)
-        button('Rules and Controls',WIDTH//2 - 230//2,330,220,50,colors['blue'], colors['light blue'], instructions)
-        button('Story',WIDTH//2 - 75//2-2,425,75,50,colors['blue'], colors['light blue'], story)
+        button('New Game',WIDTH//2 - 170//2,220,160,50, colors['blue'], colors['light blue'], game)
+        button('Rules and Controls',WIDTH//2 - 230//2,320,220,50,colors['blue'], colors['light blue'], instructions)
+        button('Story',WIDTH//2 - 75//2-2,420,75,50,colors['blue'], colors['light blue'], story)
         button('Exit',WIDTH//2 - 75//2-2,520,75,50,colors['blue'], colors['light blue'], quit_game) 
         
         pygame.display.update()
@@ -652,17 +653,7 @@ def game_intro():
 #####################################################################################################################################
 ######################################################## Game Main Loop #############################################################
 def game():
-    global pause
-    # global exiting
-    global playerX
-    global playerX_change
-    global playerY
-    global playerY_change
-    global Score
-    global riddleNum
-    global policeX
-    global policeY
-    global counter
+    global pause, playerX, playerX_change, playerY, playerY_change, Score, riddleNum, policeX, policeY, counter 
     global Time_paused, Time_elapsed, start_time
     running = True
 
@@ -677,14 +668,14 @@ def game():
         clock.tick(FPS)
         screen.fill(colors['black'])
         Map()
-        #Check if Games time is up (it has been more than 30 seconds from when we started the game)
+        placesText()
 
+        #Check if Games time is up (it has been more than the playtime from when we started the game)
         Time_elapsed = pygame.time.get_ticks()-start_time-Time_paused
-
         if (start_time + (PLAY_TIME * 1000) <= pygame.time.get_ticks()):
             game_over('Your time\'s up', Score)
 
-        # score 
+        # Draw Score 
         draw_text('Score: ' + str(Score), TILESIZE, colors['black'], screen, 60, 15, True)
 
         #Calculate how much time is left by subtracting the current time and the time for which the game is paused i.e initially 0
@@ -692,12 +683,12 @@ def game():
         #As these times are stored in milliseconds, we then
         #divide by 1000 to convert to seconds, and convert the result to an integer
         #value so that only whole seconds are shown.
-        Time_elapsed = pygame.time.get_ticks()-start_time-Time_paused    #find out how much time has passed since the start of the game and time paused for the game
-        time_left = Time_elapsed / 1000                                  #Convert this time from milliseconds to seconds
-        time_left = PLAY_TIME - time_left                                #Find out how much time is remaining by subtracting total time from time thats passed
-        time_left = int(time_left)                                       #Convert this value to an integer
+        Time_elapsed = pygame.time.get_ticks()-start_time-Time_paused   #find out how much time has passed since the start of the game and time paused for the game
+        time_left = Time_elapsed / 1000                                 #Convert this time from milliseconds to seconds
+        time_left = PLAY_TIME - time_left                               #Find out how much time is remaining by subtracting total time from time thats passed
+        time_left = int(time_left)                                      #Convert this value to an integer
         draw_text('Time Left: ' + str(time_left)+' s', TILESIZE, colors['black'], screen , WIDTH-120, 15, True)
-        placesText()
+    
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -721,8 +712,10 @@ def game():
                     paused()
                 if Score == 0:
                     game_over('Oops! You lost all your points', Score)
+                # If 4 riddles are answered correctly and player goes to locations correctly
                 if riddleNum == 4 and playerorder(playerX, playerY) == True:
                     you_win(Score)
+                # First riddle is asked a any location
                 if event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True  and riddleNum == 0: 
                     tkinterfunction()
                     if Answer == pathLog[-1].lower():
@@ -734,6 +727,7 @@ def game():
                         tkinternext()
                         Score-=5
                     riddleNum += 1
+                # If player goes to the correct location using the previous riddle
                 elif event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY) == True:
                     tkinterfunction()
                     if Answer == pathLog[-1].lower():
@@ -745,6 +739,7 @@ def game():
                         tkinternext()
                         Score-= 5
                     riddleNum += 1
+                # If player goes to the wrong location
                 elif event.key == pygame.K_SPACE and playerInteraction(playerX, playerY) == True and playerorder(playerX, playerY) == False:
                     Score -= 5
                     tkintererror(pathLog[-1].lower())
@@ -753,31 +748,26 @@ def game():
                     playerX_change = 0
                 if event.key == pygame.K_DOWN or event.key == pygame.K_UP:
                     playerY_change = 0
-            if (playerX,playerY) == (policeX,policeY):
-                    game_over('Oops! The University Security caught Dino', Score)
         pc = wallcollide(playerX,playerY,playerX_change,playerY_change)
-        if pc==False:
+        if pc == False:
             playerX += playerX_change
             playerY += playerY_change
         path = findshortestpath(nodes, policeX, policeY, playerX, playerY)
         command = translator(path)
-        if command==[]:
+        if command == []:
             game_over('Oops! The University Security caught Dino', Score)
         else:
-            if counter%2==0:
-                counter = 0
-                if command[0]=='Up':
-                    policeY-=32
-                elif command[0]=='Down':
-                    policeY+=32
-                elif command[0]=='Right':
-                    policeX+=32
-                elif command[0]=='Left':
-                    policeX-=32
-        counter +=1
+                if command[0] == 'Up':
+                    policeY -= 32
+                elif command[0] == 'Down':
+                    policeY += 32
+                elif command[0] == 'Right':
+                    policeX += 32
+                elif command[0] == 'Left':
+                    policeX -= 32
+        counter += 1
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
 
 game_intro()
-
