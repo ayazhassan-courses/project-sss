@@ -17,8 +17,8 @@ WIDTH = 1024
 HEIGHT = 768
 TILESIZE = 32
 Velocity = 32
-playerX = 5*32
-playerY = 5*32
+playerX = 25*32
+playerY = 18*32
 playerX_change = 0
 playerY_change = 0
 
@@ -78,8 +78,8 @@ def reset():
     global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time_elapsed, Time_paused, start_time
     policeX = 32
     policeY = 32 
-    playerX = 5*32
-    playerY = 5*32
+    playerX = 25*32
+    playerY = 18*32
     playerX_change = 0
     playerY_change = 0
     riddleNum = 0
@@ -539,8 +539,8 @@ def game_over(msg, Score):
         draw_text(msg, 45, colors['red'], screen, WIDTH//2, 180, True )
         draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 245, True)
         draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
-        button('Exit',WIDTH//2-50 , HEIGHT//2, 100, 50, colors['orange'],colors['light orange'], quit_game)
         button('Main Menu',WIDTH//2-75, HEIGHT//2-80, 150, 50, colors['orange'],colors['light orange'], game_intro)
+        button('Exit',WIDTH//2-50 , HEIGHT//2, 100, 50, colors['orange'],colors['light orange'], quit_game)
         
         pygame.display.update()
         clock.tick(15)
@@ -775,6 +775,7 @@ def game():
                 elif command[0]=='Left':
                     policeX-=32
         counter +=1
+        print(playerX,playerY)
         player(playerX, playerY)
         police(policeX, policeY)
         pygame.display.update()
