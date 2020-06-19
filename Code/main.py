@@ -24,6 +24,9 @@ playerY_change = 0
 
 #The maximum play time for a round in seconds
 PLAY_TIME = 100
+Time_elapsed = 0
+Time_paused  = 0
+start_time = 0
 
 # Police Settings
 policeX = 32
@@ -72,7 +75,7 @@ for y in range(len(maps)):
 
 # Restarting the Game
 def reset():
-    global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time, tick
+    global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time_elapsed, Time_paused, start_time
     policeX = 32
     policeY = 32 
     playerX = 5*32
@@ -82,6 +85,9 @@ def reset():
     riddleNum = 0
     counter = 0
     Score = 10
+    Time_paused = 0
+    Time_elapsed = 0
+    start_time = 0
 
 #  For resuming
 pause = False
@@ -494,8 +500,15 @@ def unpause():
     exiting = False
 
 def paused():
+    global Time_paused
+    global Time_elapsed
+    global start_time
+    Time_paused = 0
     pygame.mixer.music.pause()
     while pause:
+        Time_paused = (pygame.time.get_ticks()-Time_elapsed-start_time)
+        print(Time_paused)
+        print(Time_elapsed)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -508,7 +521,7 @@ def paused():
         button('Resume',WIDTH//2-50, 600//2-25-50, 100, 50, colors['pink'],colors['light pink'], unpause)
         
         pygame.display.update()
-        clock.tick(15) 
+        clock.tick(FPS) 
 
 def game_over(msg, Score):
     loop = True
@@ -650,7 +663,7 @@ def game():
     global policeX
     global policeY
     global counter
-    global Time, tick
+    global Time_paused, Time_elapsed, start_time
     running = True
 
     # BackGround Sound
@@ -664,23 +677,25 @@ def game():
         clock.tick(FPS)
         screen.fill(colors['black'])
         Map()
-        
         #Check if Games time is up (it has been more than 30 seconds from when we started the game)
+
+        Time_elapsed = pygame.time.get_ticks()-start_time-Time_paused
+
         if (start_time + (PLAY_TIME * 1000) <= pygame.time.get_ticks()):
             game_over('Your time\'s up', Score)
 
         # score 
         draw_text('Score: ' + str(Score), TILESIZE, colors['black'], screen, 60, 15, True)
 
-        #Calculate how much time is left by subtracting the current time
+        #Calculate how much time is left by subtracting the current time and the time for which the game is paused i.e initially 0
         #from the start time, and then this value from the maximum allowed time (30 seconds).
         #As these times are stored in milliseconds, we then
         #divide by 1000 to convert to seconds, and convert the result to an integer
         #value so that only whole seconds are shown.
-        time_left = pygame.time.get_ticks() - start_time #find out how much time has passed since the start of the game
-        time_left = time_left / 1000 #Convert this time from milliseconds to seconds
-        time_left = PLAY_TIME - time_left #Find out how much time is remaining by subtracting total time from time thats passed
-        time_left = int(time_left) #Convert this value to an integer
+        Time_elapsed = pygame.time.get_ticks()-start_time-Time_paused    #find out how much time has passed since the start of the game and time paused for the game
+        time_left = Time_elapsed / 1000                                  #Convert this time from milliseconds to seconds
+        time_left = PLAY_TIME - time_left                                #Find out how much time is remaining by subtracting total time from time thats passed
+        time_left = int(time_left)                                       #Convert this value to an integer
         draw_text('Time Left: ' + str(time_left)+' s', TILESIZE, colors['black'], screen , WIDTH-120, 15, True)
         placesText()
         for event in pygame.event.get():
