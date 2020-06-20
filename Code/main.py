@@ -25,7 +25,7 @@ playerX_change = 0
 playerY_change = 0
 
 #The maximum play time for a round in seconds
-PLAY_TIME = 100
+PLAY_TIME = 180
 Time_elapsed = 0
 Time_paused  = 0
 start_time = 0
@@ -273,7 +273,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     else:
         pygame.draw.rect(screen, ic,(x,y,w,h))
 
-    smallText = pygame.font.SysFont(None,30)
+    smallText = pygame.font.Font('Game Font.ttf',22)
     textSurface = smallText.render(msg, True, colors['yellow'])
     textSurf, textRect = textSurface, textSurface.get_rect()
     textRect.center = ( (x+(w//2)), (y+(h//2)) )
@@ -512,18 +512,17 @@ def paused():
     pygame.mixer.music.pause()
     while pause:
         Time_paused = (pygame.time.get_ticks()-Time_elapsed-start_time)
-        print(Time_paused)
-        print(Time_elapsed)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
                 
         screen.fill(colors['black'])
-        draw_text('Paused',60,colors['white'], screen, WIDTH//2, 220, True)
-        button('Exit',WIDTH//2-50 , 220+50+200, 100, 50, colors['pink'],colors['light pink'], quit_game)
-        button('Main Menu',WIDTH//2-75, 220+50+100, 150, 50, colors['pink'],colors['light pink'], game_intro)
+
+        draw_text('Paused',50,colors['white'], screen, WIDTH//2, 210, True, 'karma future.ttf')
         button('Resume',WIDTH//2-50, 220+50, 100, 50, colors['pink'],colors['light pink'], unpause)
+        button('Main Menu',WIDTH//2-75, 220+50+100, 150, 50, colors['pink'],colors['light pink'], game_intro)
+        button('Exit',WIDTH//2-50 , 220+50+200, 100, 50, colors['pink'],colors['light pink'], quit_game)
         
         pygame.display.update()
         clock.tick(FPS) 
@@ -541,11 +540,12 @@ def game_over(msg, Score):
                 sys.exit()
 
         screen.fill(colors['black'])
-        draw_text(msg, 45, colors['red'], screen, WIDTH//2, 150, True )
-        draw_text('GAME OVER!',80,colors['red'], screen, WIDTH//2, 220, True, 'Pokemon_GB.ttf')
-        draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
-        button('Exit',WIDTH//2-50 , 220+50+100, 100, 50, colors['orange'],colors['light orange'], quit_game)
+        
+        draw_text('SCORE: ' + str(Score),30,colors['white'], screen, WIDTH//2, 90, True, 'karma future.ttf')
+        draw_text(msg, 30, colors['red'], screen, WIDTH//2, 150, True, 'Game Font.ttf' )
+        draw_text('GAME OVER!',50,colors['red'], screen, WIDTH//2, 210, True, 'karma future.ttf')
         button('Main Menu',WIDTH//2-75, 220+50, 150, 50, colors['orange'],colors['light orange'], game_intro)
+        button('Exit',WIDTH//2-50 , 220+50+100, 100, 50, colors['orange'],colors['light orange'], quit_game)
         
         pygame.display.update()
         clock.tick(15)
@@ -563,11 +563,12 @@ def you_win(Score):
                 sys.exit()
 
         screen.fill(colors['black'])
-        draw_text('SCORE: ' + str(Score),50,colors['white'], screen, WIDTH//2, 90, True)
-        draw_text('Congratulations, you helped Dino find his friend!',45,colors['pink'], screen, WIDTH//2, 150, True)
-        draw_text('YOU WIN!',80,colors['pink'], screen, WIDTH//2, 220, True, 'Pokemon_GB.ttf')
-        button('Exit',WIDTH//2-50 , 220+50+100, 100, 50, colors['purple'],colors['light purple'], quit_game)
+
+        draw_text('SCORE: ' + str(Score),30,colors['white'], screen, WIDTH//2, 90, True, 'karma future.ttf')
+        draw_text('Congratulations, you helped Dino find his friend!',30,colors['pink'], screen, WIDTH//2, 150, True, 'Game Font.ttf')
+        draw_text('YOU WIN!',45,colors['pink'], screen, WIDTH//2, 210, True, 'karma future.ttf')
         button('Main Menu',WIDTH//2-75, 220+50, 150, 50, colors['purple'],colors['light purple'], game_intro)
+        button('Exit',WIDTH//2-50 , 220+50+100, 100, 50, colors['purple'],colors['light purple'], quit_game)
     
         pygame.display.update()
         clock.tick(15)
@@ -581,19 +582,20 @@ def instructions():
                 sys.exit()
 
         screen.fill(colors['black'])
-        draw_text('Instructions',50,colors['purple'], screen, WIDTH//2, 50, True)
-        draw_text('• You are given 10 points initially.',25,colors['light blue'],screen,260,114,True)
-        draw_text('• There are 4 destinations that Dino must visit (i.e 4 riddles).',25,colors['light blue'],screen,370,144,True)
-        draw_text('• At each destination, you will meet a student. Click on the space bar and a new riddle will pop up.',25,colors['light blue'],screen,521,174,True)
-        draw_text('• Solve each riddle correctly to know where to go next.',25,colors['light blue'],screen,343,204,True)
-        draw_text('• Use the up,down,left,right keys in order to move Dino in the respective directions.',25,colors['light blue'],screen,460,234,True)
-        draw_text('• Once Dino meets his friend without being caught, you win.',25,colors['light blue'],screen,366,264,True)
-        draw_text('• If Dino is caught by a security guard, you lose.',25,colors['light blue'],screen,316,294,True)
-        draw_text('Rules',50,colors['purple'], screen, WIDTH//2, 350, True)
-        draw_text('• You will be timed! Solve riddles as quickly as possible.',25,colors['light blue'],screen,348,390,True)
-        draw_text('• If time runs out while solving a riddle, a guard will automatically catch Dino.',25,colors['light blue'],screen,440,420,True)
-        draw_text('• There will be a deduction of 5 points for every riddle incorrectly answered and if you go to the',25,colors['light blue'],screen,508,450,True)
-        draw_text('wrong destination aswell. If your points run out, it is game over.',25,colors['light blue'],screen,394,480,True)
+
+        draw_text('Instructions',50,colors['purple'], screen, WIDTH//2, 40, True, 'Game Font.ttf')
+        draw_text('• You are given 10 points initially.',20,colors['light blue'],screen,260,114,True, 'Game Font.ttf')
+        draw_text('• There are 4 destinations that Dino must visit (i.e 4 riddles).',20,colors['light blue'],screen,370,144,True, 'Game Font.ttf')
+        draw_text('• At each destination, you will meet a student. Click on the space bar and a new riddle will pop up.',20,colors['light blue'],screen,521,174,True, 'Game Font.ttf')
+        draw_text('• Solve each riddle correctly to know where to go next.',20,colors['light blue'],screen,343,204,True, 'Game Font.ttf')
+        draw_text('• Use the up,down,left,right keys in order to move Dino in the respective directions.',20,colors['light blue'],screen,460,234,True, 'Game Font.ttf')
+        draw_text('• Once Dino meets his friend without being caught, you win.',20,colors['light blue'],screen,366,264,True, 'Game Font.ttf')
+        draw_text('• If Dino is caught by a security guard, you lose.',20,colors['light blue'],screen,316,294,True, 'Game Font.ttf')
+        draw_text('Rules',40,colors['purple'], screen, WIDTH//2, 350, True, 'Game Font.ttf')
+        draw_text('• You will be timed! Solve riddles as quickly as possible.',20,colors['light blue'],screen,348,390,True, 'Game Font.ttf')
+        draw_text('• If time runs out while solving a riddle, a guard will automatically catch Dino.',20,colors['light blue'],screen,440,420,True, 'Game Font.ttf')
+        draw_text('• There will be a deduction of 5 points for every riddle incorrectly answered and if you go to the',20,colors['light blue'],screen,508,450,True, 'Game Font.ttf')
+        draw_text('wrong destination aswell. If your points run out, it is game over.',20,colors['light blue'],screen,394,480,True, 'Game Font.ttf')
 
         button('Main Menu',720, 600, 120, 50, colors['green'],colors['light green'], game_intro)
         
@@ -609,22 +611,23 @@ def story():
                 sys.exit()
 
         screen.fill(colors['black'])
-        draw_text('Background Story',50,colors['light red'], screen, WIDTH//2, 70, True)
-        draw_text('A Dino had a rough day and goes out for a walk.',25,colors['white'],screen,260,144,True)
-        draw_text('Lost in his thoughts, he loses track of where he is and',25,colors['white'],screen,680,144,True)
-        draw_text('ends up entering Habib University.',25,colors['white'],screen,210,165,True)
-        draw_text('He has entered HU accidentally and has realised that the security has',25,colors['white'],screen,647,165,True)
-        draw_text('spotted him and is now after him. Dino is worried because he is unaware of ',25,colors['white'],screen,374,187,True)
-        draw_text('what the security might do.',25,colors['white'],screen,800,187,True)
-        draw_text('Luckily, Dino knows a student in HU and he is sure that his friend will help him escape!',25,colors['white'],screen,424,208,True)
-        draw_text('However,',25,colors['white'],screen,820,208,True)
-        draw_text('he doesn’t know where to go.',25,colors['white'],screen,184,228,True)
-        draw_text('You are to help Dino find his friend!',30,colors['light red'],screen,515,260,True)
-        draw_text('It is your responsibility to navigate Dino and make sure he is not caught by security guard that is after him.',25,colors['white'],screen,502,300,True)
-        draw_text('In order to help, you will be given riddles based on the HU campus. The solution of each',25,colors['white'],screen,420,320,True)
-        draw_text('riddle is the destination',25,colors['white'],screen,885,320,True)
-        draw_text('you must go to where you will be given another riddle. These riddles will lead Dino to his friend who will tell him',25,colors['white'],screen,520,342,True)
-        draw_text('where the exit is. Make sure Dino is not caught by the security!',25,colors['white'],screen,318,362,True)
+
+        draw_text('Background Story',40,colors['light red'], screen, WIDTH//2, 70, True, 'Game Font.ttf')
+        draw_text('A Dino had a rough day and goes out for a walk.',20,colors['white'],screen,260,144,True, 'Game Font.ttf')
+        draw_text('Lost in his thoughts, he loses track of where he is and',20,colors['white'],screen,680,144,True, 'Game Font.ttf')
+        draw_text('ends up entering Habib University.',20,colors['white'],screen,210,165,True, 'Game Font.ttf')
+        draw_text('He has entered HU accidentally and has realised that the security has',20,colors['white'],screen,647,165,True, 'Game Font.ttf')
+        draw_text('spotted him and is now after him. Dino is worried because he is unaware of ',20,colors['white'],screen,374,187,True, 'Game Font.ttf')
+        draw_text('what the security might do.',20,colors['white'],screen,800,187,True, 'Game Font.ttf')
+        draw_text('Luckily, Dino knows a student in HU and he is sure that his friend will help him escape!',20,colors['white'],screen,424,208,True, 'Game Font.ttf')
+        draw_text('However,',20,colors['white'],screen,820,208,True, 'Game Font.ttf')
+        draw_text('he doesn’t know where to go.',20,colors['white'],screen,184,228,True, 'Game Font.ttf')
+        draw_text('You are to help Dino find his friend!',25,colors['light red'],screen,515,260,True, 'Game Font.ttf')
+        draw_text('It is your responsibility to navigate Dino and make sure he is not caught by security guard that is after him.',20,colors['white'],screen,502,300,True, 'Game Font.ttf')
+        draw_text('In order to help, you will be given riddles based on the HU campus. The solution of each',20,colors['white'],screen,420,320,True, 'Game Font.ttf')
+        draw_text('riddle is the destination',20,colors['white'],screen,885,320,True, 'Game Font.ttf')
+        draw_text('you must go to where you will be given another riddle. These riddles will lead Dino to his friend who will tell him',20,colors['white'],screen,520,342,True, 'Game Font.ttf')
+        draw_text('where the exit is. Make sure Dino is not caught by the security!',20,colors['white'],screen,318,362,True, 'Game Font.ttf')
         button('Main Menu',680, 520, 120, 50, colors['green'],colors['light green'], game_intro)
         
         pygame.display.update()
@@ -642,7 +645,7 @@ def game_intro():
 
         screen.fill(colors['black'])
   
-        draw_text('DINOVENTURE', 80, colors['orange'], screen, WIDTH//2, 150, True, 'Pokemon_GB.ttf')    
+        draw_text('DINOVENTURE', 60, colors['orange'], screen, WIDTH//2, 130, True, 'Title Font.ttf')    
         button('New Game',WIDTH//2 - 170//2,220,160,50, colors['blue'], colors['light blue'], game)
         button('Rules and Controls',WIDTH//2 - 230//2,320,220,50,colors['blue'], colors['light blue'], instructions)
         button('Story',WIDTH//2 - 75//2-2,420,75,50,colors['blue'], colors['light blue'], story)
@@ -677,8 +680,8 @@ def game():
             game_over('Your time\'s up', Score)
 
         # Draw Score 
-        draw_text('Score: ' + str(Score), TILESIZE, colors['black'], screen, 60, 15, True)
-
+        draw_text('Score: ' + str(Score), 25, colors['black'], screen, 85, 15, True, 'Game Font.ttf')
+        draw_text
         #Calculate how much time is left by subtracting the current time and the time for which the game is paused i.e initially 0
         #from the start time, and then this value from the maximum allowed time (30 seconds).
         #As these times are stored in milliseconds, we then
@@ -688,7 +691,7 @@ def game():
         time_left = Time_elapsed / 1000                                 #Convert this time from milliseconds to seconds
         time_left = PLAY_TIME - time_left                               #Find out how much time is remaining by subtracting total time from time thats passed
         time_left = int(time_left)                                      #Convert this value to an integer
-        draw_text('Time Left: ' + str(time_left)+' s', TILESIZE, colors['black'], screen , WIDTH-120, 15, True)
+        draw_text('Time Left: ' + str(time_left)+' s', 25, colors['black'], screen , WIDTH-120, 15, True, 'Game Font.ttf')
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
