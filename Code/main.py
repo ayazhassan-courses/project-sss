@@ -1,3 +1,5 @@
+# DSA Project by Samarah Asghar Sahto, Shafaq Fatima Mughal, Shayan Aamir
+
 import pygame,time,sys,random
 from pygame.locals import *
 from pygame import mixer
@@ -5,30 +7,58 @@ from tkinter import *
 import tkinter.font as font
 import tkinter.messagebox
 
-pygame.mixer.init()
 clock = pygame.time.Clock()
 
-# Window Size and 
-playerImg = pygame.image.load('dino.png')
+# Window Size and other variables
 WIDTH = 1024
 HEIGHT = 768
 TILESIZE = 32
 Score = 10
 riddleNum = 0
 Answer = ''
+pause = False
+Mute = False
 
-# Player
-Velocity = 32
-playerX = 25*32
-playerY = 18*32
-playerX_change = 0
-playerY_change = 0
+# Intialize the pygame
+pygame.init()   
+
+# Create the screen
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+# Caption and Icon
+pygame.display.set_caption("Dinoventure")
+icon = pygame.image.load('dino.png')
+pygame.display.set_icon(icon)
 
 #The maximum play time for a round in seconds
 PLAY_TIME = 180
 Time_elapsed = 0
 Time_paused  = 0
 start_time = 0
+
+# Music initialize, load and functions
+pygame.mixer.init()
+gover_sound = pygame.mixer.Sound("game over.wav")
+success_sound = pygame.mixer.Sound("success.wav")
+
+def mute():
+    global Mute
+    Mute = True
+    pygame.mixer.music.pause()
+
+def unmute():
+    global Mute 
+    Mute = False
+    pygame.mixer.music.unpause()
+
+
+# Player
+playerImg = pygame.image.load('dino.png')
+Velocity = 32
+playerX = 25*32
+playerY = 18*32
+playerX_change = 0
+playerY_change = 0
 
 # Police Settings and FPS
 policeload = pygame.image.load('police.png')
@@ -74,7 +104,7 @@ for y in range(len(maps)):
                 nodes[(x,y)]=nodes.get((x,y))+[(x,y+1,1)]
                 nodes[(x,y+1)]=nodes.get((x,y+1))+[(x,y,1)]
 
-# Restarting the Game
+# To reset variables when restarting the Game
 def reset():
     global policeX, policeY, playerX, playerY, playerX_change, playerY_change, riddleNum, counter, Score, Time_elapsed, Time_paused, start_time, PLAY_TIME
     policeX = 32
@@ -91,22 +121,6 @@ def reset():
     start_time = 0
     PLAY_TIME = 100
 
-# For resuming
-pause = False
-gover_sound = pygame.mixer.Sound("game over.wav")
-success_sound = pygame.mixer.Sound("success.wav")
-
-# Intialize the pygame
-pygame.init()   
-
-# Create the screen
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-# Caption and Icon
-pygame.display.set_caption("Dinoventure")
-icon = pygame.image.load('dino.png')
-pygame.display.set_icon(icon)
-
 # Colors using RGB
 colors={
     'white': (255,255,255), 'black': (0,0,0),
@@ -122,7 +136,7 @@ colors={
     'solid blue':(0,0,255)
 }
 ###############################################################################################################################################################################
-# Security guard Fn 
+################################################ Security guard following code using dijkstra #######################################################################################
 def Enqueue(Q,item):
     Q.append(item)
 
@@ -179,8 +193,8 @@ def translator(path):
             commands.append('Up')
     return commands
 
-########################################################################################################################################
-# Code for riddle
+######################################################################################################################################################
+################################################### Code for asking riddle randomly using stacks ############################################################
 RiddleQ = {
     "Cash me outside, how about that?": 'bank', 
     "No man's land.": "female lounge" , 
@@ -251,8 +265,8 @@ def playerorder(playerX, playerY):
     else:
         return False
         
-########################################################################################################################################
-# GUI Functions
+#################################################################################################################################################
+############################################################ GUI Functions ######################################################################
 def draw_text(text, size, color, surface, x, y, center, Font=None):
     font = pygame.font.Font(Font, size)
     textobj = font.render(text, 1, color)
@@ -279,7 +293,8 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textRect.center = ( (x+(w//2)), (y+(h//2)) )
     screen.blit(textSurf, textRect)
 
-########################################################################################################################################
+###########################################################################################################################################################
+########################################################## Drawing map/ making wall restrictions ###############################################################################
 def Wall(x,y,color):
     image = pygame.Surface((TILESIZE, TILESIZE))
     image.fill(colors[color])
@@ -376,8 +391,8 @@ def playerInteraction(playerX, playerY):
     else:
         return False
     
-########################################################################################################################################
-# Tkinter Functions
+#####################################################################################################################################################
+####################################################### Tkinter Functions ###########################################################################
 def tkinternext():
     root = Tk()
     root.resizable(0,0)
@@ -496,20 +511,17 @@ def quit_game():
     pygame.quit()
     sys.exit()
 
-# Options Menu/ Pause Game
 def unpause():
-    global pause
-    global exiting
-    pygame.mixer.music.unpause()
+    global pause, Mute
+    if Mute == False:
+        pygame.mixer.music.unpause()
     pause = False
-    exiting = False
 
 def paused():
-    global Time_paused
-    global Time_elapsed
-    global start_time
+    global Time_paused, Time_elapsed, start_time, Mute
     Time_paused = 0
-    pygame.mixer.music.pause()
+    if Mute == False:
+        pygame.mixer.music.pause()
     while pause:
         Time_paused = (pygame.time.get_ticks()-Time_elapsed-start_time)
         for event in pygame.event.get():
@@ -528,9 +540,11 @@ def paused():
         clock.tick(FPS) 
 
 def game_over(msg, Score):
+    global Mute
     loop = True
-    pygame.mixer.music.stop()
-    pygame.mixer.Sound.play(gover_sound)
+    if Mute == False:
+        pygame.mixer.music.stop()
+        pygame.mixer.Sound.play(gover_sound)
     reset()
     questions()
     while loop:
@@ -551,11 +565,13 @@ def game_over(msg, Score):
         clock.tick(15)
 
 def you_win(Score):
+    global Mute
     reset()
     questions()
     loop = True
-    pygame.mixer.music.stop()
-    pygame.mixer.Sound.play(success_sound)
+    if Mute == False:   
+        pygame.mixer.music.stop()
+        pygame.mixer.Sound.play(success_sound)
     while loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -663,6 +679,7 @@ def game_intro():
 def game():
     global pause, playerX, playerX_change, playerY, playerY_change, Score, riddleNum, policeX, policeY, counter 
     global Time_paused, Time_elapsed, start_time
+    global Mute
     running = True
 
     # BackGround Sound
@@ -677,6 +694,10 @@ def game():
         screen.fill(colors['black'])
         Map()
         placesText()
+
+        # Mute unmute options
+        button('Mute', 800, 2, 80, 30, colors['blue'], colors['light blue'], mute)
+        button('Unmute', 900, 2, 90, 30, colors['blue'], colors['light blue'], unmute)
 
         #Check if Games time is up (it has been more than the playtime from when we started the game)
         Time_elapsed = pygame.time.get_ticks()-start_time-Time_paused
@@ -695,7 +716,7 @@ def game():
         time_left = Time_elapsed / 1000                                 #Convert this time from milliseconds to seconds
         time_left = PLAY_TIME - time_left                               #Find out how much time is remaining by subtracting total time from time thats passed
         time_left = int(time_left)                                      #Convert this value to an integer
-        draw_text('Time Left: ' + str(time_left)+' s', 25, colors['black'], screen , WIDTH-120, 15, True, 'Game Font.ttf')
+        draw_text('Time Left: ' + str(time_left)+' s', 25, colors['black'], screen , 260, 15, True, 'Game Font.ttf')
     
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
